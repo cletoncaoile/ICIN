@@ -13,7 +13,7 @@
   $signemail=addslashes($_POST['signemail']);
   $signpassword1=addslashes($_POST['signpassword1']);
    
-      $sql = "INSERT INTO tbuser(username,fn,ln,sex,profilepic,email,password,usertype) VALUES ('$signusername','$signfn','$signln','$signsex','$file','$signemail','$signpassword1','User')";  
+      $sql = "INSERT INTO tbuser(username,fn,ln,sex,profilepic,email,password,usertype) VALUES ('$signusername','$signfn','$signln','$signsex','$file','$signemail','".md5($signpassword1)."','User')";  
       if(mysqli_query($con, $sql))  
       {  
            echo '<script>alert("Successfully Registered")</script>';  
@@ -131,13 +131,13 @@
         </div>
  <form method="post" enctype="multipart/form-data">
         <div class="col-sm-6">
-         <br> <input class="form-control" type="text" name="signfn" id="signfn" placeholder="Enter First Name">
+         <br> <input class="form-control" type="text" name="signfn" id="signfn" placeholder="Enter First Name"  value="<?php echo isset($_POST['signfn']) ? $_POST['signfn'] : '' ?>">
         </div>
 
         <div class="col-sm-6">
-         <br> <input class="form-control" type="text" name="signln" id="signln" placeholder="Enter Last Name">
+         <br> <input class="form-control" type="text" name="signln" id="signln" placeholder="Enter Last Name" value="<?php echo isset($_POST['signln']) ? $_POST['signfn'] : '' ?>">
         </div>
-
+        
         <div class="col-sm-6">
           <br><label>Gender</label><br>
           <select class="form-control" id="signsex" name="signsex">
@@ -152,17 +152,17 @@
            <span id="uploaded_image"></span>
         </div>
         <div class="col-sm-12">
-          <br><input class="form-control" type="text" name="signemail" id="signemail" placeholder="Enter Email"><br>
+          <br><input class="form-control" type="text" name="signemail" id="signemail" placeholder="Enter Email" value="<?php echo isset($_POST['signemail']) ? $_POST['signemail'] : '' ?>"><br>
         </div>
         
         <div class="col-sm-12">
-         <input class="form-control" type="text" name="signusername" id="signusername" placeholder="Enter Username"><br>
+         <input class="form-control" type="text" name="signusername" id="signusername" placeholder="Enter Username" value="<?php echo isset($_POST['signusername']) ? $_POST['signusername'] : '' ?>"><br>
         </div>
         <div class="col-sm-6">
-          <input class="form-control" type="text" name="signpassword1" id="signpassword1" placeholder="Enter New Password">
+          <input class="form-control" type="password" name="signpassword1" id="signpassword1" placeholder="Enter New Password">
         </div>
         <div class="col-sm-6">
-          <input class="form-control" type="text" name="signpassword2" id="signpassword2" placeholder="Enter Confirm Password"><br>
+          <input class="form-control" type="password" name="signpassword2" id="signpassword2" placeholder="Enter Confirm Password"><br>
         </div>
         <div class="col-sm-12">
           <button class="btn btn-success btn-block" name="insert" id="insert">Sign Up</button>
@@ -208,6 +208,7 @@
 <script src="assets/js/custom.js"></script>
 
  <script>  
+
  $(document).ready(function(){  
       $('#insert').click(function(){
             var signusername=$('#signusername').val();  

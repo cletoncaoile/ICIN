@@ -1,3 +1,39 @@
+<?php 
+session_start();
+  require 'db.php';
+  if (!isset($_SESSION["logusername"])){
+    header('Location: login');
+}
+  
+  if($con){
+    if(isset($_POST["btnupload"])){
+     $craftname=addslashes($_POST['craftname']);
+   $category=addslashes($_POST['category']);
+   $difficulty=addslashes($_POST['difficulty']);
+   $stat=addslashes($_POST['stat']);
+   $price=addslashes($_POST['price']);
+    $outputpic0 = addslashes(file_get_contents($_FILES["outputpic0"]["tmp_name"]));
+    $outputpic1 = addslashes(file_get_contents($_FILES["outputpic1"]["tmp_name"])); 
+    $outputpic2 = addslashes(file_get_contents($_FILES["outputpic2"]["tmp_name"])); 
+    $outputpic3 = addslashes(file_get_contents($_FILES["outputpic3"]["tmp_name"])); 
+    $date = date('Y-m-d H:i:s');
+   $video=addslashes($_POST['video']);
+   $newvideo=substr($video, 32);
+   $craftdesc=addslashes($_POST['craftdesc']);
+   $craftmaterial=addslashes($_POST['craftmaterial']);
+    
+    $sql="INSERT INTO tbcraft(username,dateshared,namecraft,category,difficulty,status,price,output1,output2,output3,output4,video,description,materials,approveordisaprove)VALUES('".$_SESSION['logusername']."','$date','$craftname','$category','$difficulty','$stat','$price','$outputpic0','$outputpic1','$outputpic2','$outputpic3','$newvideo','$craftdesc','$craftmaterial','0')";
+    if(mysqli_query($con,$sql)){
+         echo '<script>alert("Successfully Uploaded")</script>'; 
+         header('Location: steps'); 
+     }
+    else{
+        echo '<script>alert("Upload Failed")</script>';  
+    }
+    } 
+  }
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,6 +41,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+  
 <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="assets/css/animate.css">
@@ -31,6 +68,9 @@
 		background-color: black;
 		
 	}
+  .form-control:focus{
+  border-color: #00AF66;  box-shadow: none; -webkit-box-shadow: none;
+} 
 	#m:hover{
 		background-color: #003000;
 		width: 158px;
@@ -52,58 +92,62 @@
 .effect-layla:hover{
 	background-color: #00AF66;
 }
+#btnupload:hover{
+  background-color: #003000;
+}
+#btnupload{
+  background-color: #00AF66;
+}
 </style>
     
  
-<div id="preloader">
-  
-</div>
+
 <a class="scrollToTop" href="#"><i class="fa fa-angle-up"></i></a>
 	
 
 <header class="navbar navbar-inverse" role="navigation" style="background-color: #00AF66">
-    		<div class="navbar-header">
+        <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
       </div>
 
-    		<div class="row">
-		<div class="col-lg-12 col-md-12 col-sm-12" >
-			 <div id="navbar1" class="navbar-collapse collapse">
+        <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12" >
+       <div id="navbar1" class="navbar-collapse collapse">
         <div class="header_top_right">
             
             <ul class="top_nav">
-            	<li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
-            	<li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Upload Item</a>
-            		<ul id="menu1" class="dropdown-menu" role="menu">
-              			<li><a id="m" href="uploadcraft">Crafted Item</a></li>
-              			
-             		</ul>
-			 	</li>
-			 		<li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Category</a>
-            		<ul id="menu1" class="dropdown-menu" role="menu">
-              			<li><a id="m" href="mainmenu">All Category</a></li>
-              			<li><a id="m" href="mainmenu">Furnitures</a></li>
-              			<li><a id="m" href="mainmenu">Clothes</a></li>
-              			<li><a id="m" href="mainmenu">Decorations</a></li>
-             		</ul>
-			 	</li>
-			 		<li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Craft Store</a>
-            		<ul id="menu1" class="dropdown-menu" role="menu">
-              			<li><a id="m" href="craftstore">Crafted Items</a></li>
-              		
-             		</ul>
-			 	</li>
+              <li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
+              <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Upload Item</a>
+                <ul id="menu1" class="dropdown-menu" role="menu">
+                    <li><a id="m" href="uploadcraft">Crafted Item</a></li>
+                  
+                </ul>
+        </li>
+          <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Category</a>
+                <ul id="menu1" class="dropdown-menu" role="menu">
+                    <li><a id="m" href="mainmenu">All Category</a></li>
+                    <li><a id="m" href="mainmenu">Furnitures</a></li>
+                    <li><a id="m" href="mainmenu">Clothes</a></li>
+                    <li><a id="m" href="mainmenu">Decorations</a></li>
+                </ul>
+        </li>
+          <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Craft Store</a>
+                <ul id="menu1" class="dropdown-menu" role="menu">
+                    <li><a id="m" href="craftstore">Crafted Items</a></li>
+                    
+                </ul>
+        </li>
              
               
-      			
+            
 
             </ul>
           </div>
 
           <div class="header_top_right">
 
-			<p><input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
-			</p>
+      <p><input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
+      </p>
           </div>
         </div>
       </div>
@@ -116,15 +160,20 @@
           <div class="col-sm-11">
              <div class="latest_newsarea" style="background-color: #00AF66"> <span style="background-color:#003000">Recently Uploaded</span>
           <ul id="ticker01" class="news_sticker">
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
+             <?php
+             require 'db.php'; 
+            
+            $sqlrecent="SELECT * FROM tbcraft ORDER BY idcraft DESC";
+            $resultrecent=mysqli_query($con,$sqlrecent);
+            while($row = mysqli_fetch_array($resultrecent)){
+              echo "<li><a href='craftview'>";
+               echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
+              echo "".$row['namecraft']."</a></li>";
+
+            }
+
+            ?>
+            
           </ul>
          
         </div>
@@ -142,61 +191,81 @@
          
          <div class="single_post_content">
             <h2 style="background-color: #00AF66"><span style="background-color:#003000">Upload Recycled Craft</span></h2>
+            
+          <?php 
+    
+            echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . $_SESSION["logusername"] . "</label> wishing you all the best!ahaha</h3>";
+            ?>
+
+            <form method="post" enctype="multipart/form-data">
            	<div class="col-sm-12">
-           		 <input class="form-control" type="text" name="" placeholder="Name of your recycled project">
+             
+           		 <input class="form-control" type="text" name="craftname" id="craftname" placeholder="Name of your recycled project">
+               
            	</div>
              
               <div class="col-sm-3">
               	<br><label>Choose Category</label>
-             <select class="form-control" id="Category">
-    			<option>All Category</option>
-   			 <option>Clothes</option>
-   			 <option>Decoration</option>
-   			 <option>Furnitures</option>
+             <select class="form-control" id="category" name="category">
+    			<option value="All Category">All Category</option>
+   			 <option value="Clothes">Clothes</option>
+   			 <option value="Decoration">Decoration</option>
+         <option value="Furnitures">Furnitures</option>
+         <option value="Others">Others</option>
  			 </select>
               </div>
               <div class="col-sm-3">
               	<br><label>Choose Difficulty</label>
-             <select class="form-control" id="Category">
-    			<option>Easy</option>
-   			 <option>Intermediate</option>
-   			 <option>Advance</option>
+             <select class="form-control" id="difficulty" name="difficulty">
+    			<option value="Easy">Easy</option>
+   			 <option value="Intermediate">Intermediate</option>
+   			 <option value="Advance">Advance</option>
    			 </select>
               </div>
               <div class="col-sm-3">
                 
               	<br><label>Choose Status</label>
-              	 <select class="form-control" id="Category">
+              	 <select class="form-control" id="stat" name="stat">
     			<option value="For Sale">For Sale</option>
    			 <option value="Not For Sale">Not For Sale</option>
    			</select>
               </div>
              <div id="prices" class="col-sm-3">
-             	<br><label>Price</label>
-             	<input class="form-control" type="text" name="" placeholder="Price">
+             	<br><label id="pricelabel">Price</label>
+             	<input class="form-control" type="text" name="price" id="price" placeholder="Price">
              </div>
 
 
              <div class="col-sm-12">
-             	<br><label>Choose image of your output Recycled Craft (max 4 pictures)</label>
-             <input class="form-control" type="file" name="">
-             <br><input class="form-control" type="file" name="">
-             <br><input class="form-control" type="file" name="">
-             <br><input class="form-control" type="file" name="">
-             <br><label>Imbed</label>
-             <br><input class="form-control" type="text" name="" placeholder="Embed Script">
-             <br><textarea rows="3" class="form-control" placeholder="Description"></textarea>
-             <br><textarea rows="3" class="form-control" placeholder="Material used"></textarea>
+             	<br><label>Choose image of your output Recycled Craft (4 pictures Required)</label>
+             <input class="form-control" type="file" name="outputpic0" id="outputpic0">
+             <br><input class="form-control" type="file" name="outputpic1" id="outputpic1">
+             <br><input class="form-control" type="file" name="outputpic2" id="outputpic2">
+             <br><input class="form-control" type="file" name="outputpic3" id="outputpic3">
+             <br><label>Video</label>
+             <br><input class="form-control" type="text" id="video" name="video" placeholder="Copy the link of your youtube video">
+
+             <br><textarea rows="3" class="form-control"  placeholder="Description"  id="craftdesc" name="craftdesc"></textarea>
+             <br><textarea rows="3" class="form-control" placeholder="Material used" id="craftmaterial" name="craftmaterial"></textarea>
          	    
-              <br><div id="tbstep"></div>
+            
           </div>
              <div align="right" class="col-sm-12">
               
 
 
-             	<br><button class="btn btn-primary" onclick="generateRow()">Add Step</button><button class="btn btn-success">Save&Continue</button>
-             </div>
+             	<br>
+
+              <input class="btn btn-success" type="submit" name="btnupload" id="btnupload" value="Save & Continue">
               
+            
+             </div>
+
+
+             <div class="col-sm-12">
+               <div id="message"></div>
+             </div>
+              </form>
             
             
           </div>
@@ -264,9 +333,182 @@
 <script src="assets/js/jquery.fancybox.pack.js"></script> 
 <script src="assets/js/custom.js"></script>
 <script type="text/javascript">
-  function generateRow() {
-var tbstep=document.getElementById("tbstep");
+$(document).ready(function() {
+    $("#price").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A, Command+A
+            (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) || 
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+});
 
-tbstep.innerHTML+="<p><label>Choose Picture for Step 1</label><br><input class='form-control' type='file' name='1' value=''></p><p><textarea rows='3' class='form-control' placeholder='Step1'></textarea></p>";
-}
+  $(document).ready(function () {
+        $('#stat').change(function () {
+            if ($('#stat').val() == 'For Sale') {
+                $('#price').show();
+                $('#pricelabel').show();
+            }
+            else {
+                $('#price').hide();
+                $('#pricelabel').hide();
+            }
+        });
+    });
+
+ $(document).ready(function(){  
+      $('#btnupload').click(function(){
+            var craftname=$('#craftname').val();  
+            var category=$('#category').val();
+            var difficulty=$('#difficulty').val();
+            var stat=$('#stat').val();
+            var price=$('#price').val();
+            var outputpic0=$('#outputpic0').val();
+            var outputpic1=$('#outputpic1').val();
+            var outputpic2=$('#outputpic2').val();
+            var outputpic3=$('#outputpic3').val();
+            var video=$('#video').val();
+            var craftdesc=$('#craftdesc').val();
+            var craftmaterial=$('#craftmaterial').val();
+            
+            
+
+           if(craftname == '')  
+           {  
+              
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please fill up Craft</div>";
+                document.getElementById("craftname").focus();
+                 $("#message").fadeIn();
+                $("#message").fadeOut(5000);
+
+                return false;  
+           }  
+           else if(category == "All Category")  
+           {  
+              
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose Category</div>";
+                document.getElementById("category").focus();
+                 $("#message").fadeIn();
+                $("#message").fadeOut(5000);
+
+                return false;  
+           }
+        
+           else if(outputpic0 == "")  
+           {  
+              
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
+                document.getElementById("outputpic0").focus();
+                 $("#message").fadeIn();
+                $("#message").fadeOut(5000);
+
+                return false;  
+           }
+            else if(outputpic1 == "")  
+           {  
+              
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
+                document.getElementById("outputpic1").focus();
+                 $("#message").fadeIn();
+                $("#message").fadeOut(5000);
+
+                return false;  
+           }
+            else if(outputpic2 == "")  
+           {  
+              
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
+                document.getElementById("outputpic2").focus();
+                 $("#message").fadeIn();
+                $("#message").fadeOut(5000);
+
+                return false;  
+           }
+          else if(outputpic3 == "")  
+           {  
+              
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
+                document.getElementById("outputpic3").focus();
+                 $("#message").fadeIn();
+                $("#message").fadeOut(5000);
+
+                return false;  
+           }
+            else if(video == "")  
+           {  
+              
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Copy the link of your Youtube video</div>";
+                document.getElementById("video").focus();
+                 $("#message").fadeIn();
+                $("#message").fadeOut(5000);
+
+                return false;  
+           }
+            else if(craftdesc == "")  
+           {  
+              
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please fill up the Description</div>";
+                document.getElementById("craftdesc").focus();
+                 $("#message").fadeIn();
+                $("#message").fadeOut(5000);
+
+                return false;  
+           }
+            else if(craftmaterial == "")  
+           {  
+              
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please type the material used</div>";
+                document.getElementById("craftmaterial").focus();
+                 $("#message").fadeIn();
+                $("#message").fadeOut(5000);
+
+                return false;  
+           }
+             else  
+           {  
+                var extension = $('#outputpic0').val().split('.').pop().toLowerCase();  
+                if(jQuery.inArray(extension, ['gif','png','jpg','jpeg']) == -1)  
+                {  
+                     document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";  
+                     $('#outputpic0').val('');  
+                     return false;  
+                }  
+                 var extension = $('#outputpic1').val().split('.').pop().toLowerCase();  
+                if(jQuery.inArray(extension, ['gif','png','jpg','jpeg']) == -1)  
+                {  
+                     document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";  
+                     $('#outputpic1').val('');  
+                     return false;  
+                }  
+                var extension = $('#outputpic2').val().split('.').pop().toLowerCase();  
+                if(jQuery.inArray(extension, ['gif','png','jpg','jpeg']) == -1)  
+                {  
+                     document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";  
+                     $('#outputpic2').val('');  
+                     return false;  
+                }
+                var extension = $('#outputpic3').val().split('.').pop().toLowerCase();  
+                if(jQuery.inArray(extension, ['gif','png','jpg','jpeg']) == -1)  
+                {  
+                     document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";  
+                     $('#outputpic3').val('');  
+                     return false;  
+                }  
+           
+                
+           }
+           
+           
+           
+      });  
+ });  
+
 </script>

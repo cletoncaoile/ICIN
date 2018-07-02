@@ -9,13 +9,14 @@
 	if ($con) {
 		if (!empty($varloguser) && !empty($varlogpassword)) {
 
-			$sql = "SELECT * FROM tbuser WHERE BINARY username='".$varloguser."' AND BINARY password='".$varlogpassword."'";
+			$sql = "SELECT * FROM tbuser WHERE BINARY username='".$varloguser."' AND BINARY password='".md5($varlogpassword)."'";
 			$result = mysqli_query($con, $sql);
 			if (mysqli_num_rows($result) > 0) {
 				while($row=mysqli_fetch_row($result)){
 					$_SESSION['logusername'] = $row[0];
-				}
 				echo "Success";
+			}
+				
 			}
 			else
 				echo "Failed";

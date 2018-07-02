@@ -19,6 +19,10 @@
 
 
 <style type="text/css">
+#prod{
+  color:white;
+  background-color:#00AF66;
+}
 	#menu:hover{
 	background-color:black;
 	
@@ -159,49 +163,28 @@
          <div class="single_post_content">
             <h2 style="background-color: #00AF66"><span style="background-color:#003000">Recycled Crafts</span></h2>
             <ul class="photograph_nav  wow fadeInDown">
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla">
-                  	<p>Name Craft<br>Category</p>
-                  	<a class="fancybox-buttons" data-fancybox-group="button" href="#" title="Photography Ttile 1"> <img src="#" alt=""/>
-                  		</a> </figure>
-                </div>
-              </li>
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla">
-                  <p>Name Craft<br>Category</p>
-                   <a class="fancybox-buttons" data-fancybox-group="button" href="#" title="Photography Ttile 2"> <img src="#" alt=""/> </a> </figure>
-                </div>
-              </li>
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla">
-                  	<p>Name Craft<br>Category</p>
-                   <a class="fancybox-buttons" data-fancybox-group="button" href="#" title="Photography Ttile 3"> <img src="#" alt=""/> </a> </figure>
-                </div>
-              </li>
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla">
-                  	<p>Name Craft<br>Category</p>
-                   <a class="fancybox-buttons" data-fancybox-group="button" href="#" title="Photography Ttile 4"> <img src="#" alt=""/> </a> </figure>
-                </div>
-              </li>
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla"> 
-                  	<p>Name Craft<br>Category</p>
-                  	<a class="fancybox-buttons" data-fancybox-group="button" href="#" title="Photography Ttile 5"> <img src="#" alt=""/> </a> </figure>
-                </div>
-              </li>
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla"> 
-                  	<p>Name Craft<br>Category</p>
-                  	<a class="fancybox-buttons" data-fancybox-group="button" href="#" title="Photography Ttile 6"> <img src="#" alt=""/> </a> </figure>
-                </div>
-              </li>
+              <?php 
+            require 'db.php';
+          if($con){
+             $sqldisplay="SELECT * FROM tbcraft";
+          $resultdisplay=mysqli_query($con,$sqldisplay);
+          while($row=mysqli_fetch_array($resultdisplay)){
+            echo "<ul class='photograph_nav  wow fadeInDown'>";
+              echo " <li>";
+              echo "<div class='photo_grid'>";
+              echo "<figure class='effect-layla'>";
+              echo "<p id='prod'>".$row['namecraft']."<br>".$row['category']."</p>";
+              echo " <a class='fancybox-buttons' data-fancybox-group='button' href='craftview' title='Photography Ttile 1'>";
+             echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
+              echo "</a> </figure>";
+              echo "</div>";
+              echo "</li>";
+              echo "</ul>";
+          }
+          }
+              
+              
+            ?>
             </ul>
           </div>
          
@@ -214,34 +197,25 @@
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-         		<li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/clets.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/clets.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/clets.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/clets.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/clets.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-             
-           
-              
+         		  <?php 
+              require 'db.php';
+              if($con){
+
+                $sqldisplayuser="SELECT SUM(tbcraft.idcraft),tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
+                $resultuser=mysqli_query($con,$sqldisplayuser);
+                while($row=mysqli_fetch_array($resultuser)){
+                  echo "<li>";
+                  echo "<div class='media'>";
+                  echo "<a href='#' class='media-left'>";
+                  echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
+                  echo "</a>";
+                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#00AF66;'>".$row['fn']."  ".$row['ln']."  </a> </div>";
+                  echo " </div>";
+                  echo "</li>";
+                }
+              }
+
+            ?>
             </ul>
             <div id="next-button"><i class="fa fa-chevron-down"></i></div>
           </div>

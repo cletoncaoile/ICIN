@@ -1,3 +1,11 @@
+<?php 
+session_start();
+if (!isset($_SESSION["logusername"])){
+    header('Location: login');
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,8 +32,13 @@
 
 
 <style type="text/css">
-	
+	#prod{
+  color:white;
+  background-color:#00AF66;
 }
+.form-control:focus{
+  border-color: #00AF66;  box-shadow: none; -webkit-box-shadow: none;
+} 
 	#menu:hover{
 		background-color: black;
 		
@@ -129,15 +142,20 @@
           <div class="col-sm-11">
              <div class="latest_newsarea" style="background-color: #00AF66"> <span style="background-color:#003000">Recently Uploaded</span>
           <ul id="ticker01" class="news_sticker">
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
+             <?php
+             require 'db.php'; 
+            
+            $sqlrecent="SELECT * FROM tbcraft ORDER BY idcraft DESC";
+            $resultrecent=mysqli_query($con,$sqlrecent);
+            while($row = mysqli_fetch_array($resultrecent)){
+              echo "<li><a href='craftview'>";
+               echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
+              echo "".$row['namecraft']."</a></li>";
+
+            }
+
+            ?>
+            
           </ul>
          
         </div>
@@ -146,7 +164,6 @@
             <a class="btn btn-danger" href="logout">Logout</a>
           </div>
         </div>
-       
 
 
     
@@ -156,7 +173,15 @@
       <div class="col-sm-12">
       <div class="single_post_content">
             <h2 style="background-color: #00AF66"><span style="background-color:#003000">Store Locations</span></h2>
+          
            </div>
+           <div class="container-fluid">
+              <?php 
+    
+            echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . $_SESSION["logusername"] . "</label> wishing you all the best!ahaha</h3>";
+            ?>
+           </div>
+             
 
       
 </div>
@@ -180,49 +205,36 @@
          <div class="single_post_content">
             <h2 style="background-color: #00AF66"><span style="background-color:#003000">Recycled Crafts</span></h2>
             <ul class="photograph_nav  wow fadeInDown">
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla">
-                    <p>Name Craft<br>Category</p>
-                    <a class="fancybox-buttons" data-fancybox-group="button" href="craftview" title="Photography Ttile 1"> <img src="images/team/clets.jpg" alt=""/>
-                      </a> </figure>
-                </div>
-              </li>
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla">
-                  <p>Name Craft<br>Category</p>
-                   <a class="fancybox-buttons" data-fancybox-group="button" href="craftview" title="Photography Ttile 2"> <img src="images/team/clets.jpg" alt=""/> </a> </figure>
-                </div>
-              </li>
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla">
-                    <p>Name Craft<br>Category</p>
-                   <a class="fancybox-buttons" data-fancybox-group="button" href="craftview" title="Photography Ttile 3"> <img src="images/team/clets.jpg" alt=""/> </a> </figure>
-                </div>
-              </li>
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla">
-                    <p>Name Craft<br>Category</p>
-                   <a class="fancybox-buttons" data-fancybox-group="button" href="craftview" title="Photography Ttile 4"> <img src="images/team/clets.jpg" alt=""/> </a> </figure>
-                </div>
-              </li>
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla"> 
-                    <p>Name Craft<br>Category</p>
-                    <a class="fancybox-buttons" data-fancybox-group="button" href="craftview" title="Photography Ttile 5"> <img src="images/team/clets.jpg" alt=""/> </a> </figure>
-                </div>
-              </li>
-              <li>
-                <div class="photo_grid">
-                  <figure class="effect-layla"> 
-                    <p>Name Craft<br>Category</p>
-                    <a class="fancybox-buttons" data-fancybox-group="button" href="craftview" title="Photography Ttile 6"> <img src="images/team/clets.jpg" alt=""/> </a> </figure>
-                </div>
-              </li>
+           <div class="container-fluid">
+              <?php 
+
+            echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . $_SESSION["logusername"] . "</label> wishing you all the best!ahaha</h3>";
+            ?>
+           </div>
+           
+            <?php 
+            require 'db.php';
+          if($con){
+             $sqldisplay="SELECT * FROM tbcraft";
+          $resultdisplay=mysqli_query($con,$sqldisplay);
+          while($row=mysqli_fetch_array($resultdisplay)){
+            echo "<ul class='photograph_nav  wow fadeInDown'>";
+              echo " <li>";
+              echo "<div class='photo_grid'>";
+              echo "<figure class='effect-layla'>";
+              echo "<p id='prod'>".$row['namecraft']."<br>".$row['category']."</p>";
+              echo " <a class='fancybox-buttons' data-fancybox-group='button' href='craftview' title='Photography Ttile 1'>";
+             echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
+              echo "</a> </figure>";
+              echo "</div>";
+              echo "</li>";
+              echo "</ul>";
+          }
+          }
+              
+              
+            ?>
+             
             </ul>
           </div>
          
@@ -235,34 +247,27 @@
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-            <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/clets.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/clets.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/clets.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/clets.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/clets.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-             
            
-              
+              <?php 
+              require 'db.php';
+              if($con){
+
+                $sqldisplayuser="SELECT SUM(tbcraft.idcraft),tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
+                $resultuser=mysqli_query($con,$sqldisplayuser);
+                while($row=mysqli_fetch_array($resultuser)){
+                  echo "<li>";
+                  echo "<div class='media'>";
+                  echo "<a href='#' class='media-left'>";
+                  echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
+                  echo "</a>";
+                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#00AF66;'>".$row['fn']."  ".$row['ln']."  </a> </div>";
+                  echo " </div>";
+                  echo "</li>";
+                }
+              }
+
+            ?>
+            
             </ul>
             <div id="next-button"><i class="fa fa-chevron-down"></i></div>
           </div>

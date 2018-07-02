@@ -190,34 +190,25 @@
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-            <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/post_img1.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/post_img1.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/post_img1.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/post_img1.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/post_img1.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Mapag bigay na manggagamit</a> </div>
-                </div>
-              </li>
-             
-           
-              
+             <?php 
+              require 'db.php';
+              if($con){
+
+                $sqldisplayuser="SELECT SUM(tbcraft.idcraft),tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
+                $resultuser=mysqli_query($con,$sqldisplayuser);
+                while($row=mysqli_fetch_array($resultuser)){
+                  echo "<li>";
+                  echo "<div class='media'>";
+                  echo "<a href='#' class='media-left'>";
+                  echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
+                  echo "</a>";
+                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#00AF66;'>".$row['fn']."  ".$row['ln']."  </a> </div>";
+                  echo " </div>";
+                  echo "</li>";
+                }
+              }
+
+            ?>
             </ul>
             <div id="next-button"><i class="fa fa-chevron-down"></i></div>
           </div>
