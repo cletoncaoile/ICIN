@@ -109,7 +109,7 @@
                   <li>
                     <figure class="bsbig_fig wow fadeInDown"> <a href="pages/single_page.html" class="featured_img"> <img alt="" src="images/team/clets.jpg"> <span class="overlay"></span> </a>
                       <figcaption> <a href="pages/single_page.html"><span id="team">Cleton Caoile</span></a> </figcaption>
-                      <p>RECYCLING.COM Tools & Inspiration From Your Recycling Guide</p>
+                      <p>Tools & Inspiration From Your Recycling Guide</p>
                       <p>WHY “When man wants to live in balance with nature, recycling is a necessity.”</p>
                     </figure>
                   </li>
