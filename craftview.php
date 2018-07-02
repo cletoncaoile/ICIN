@@ -1,3 +1,7 @@
+<?php 
+session_start();
+require('rating.php');
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,12 +22,21 @@
   <link href="css/style.css" rel="stylesheet">
   <link href="css/style-responsive.css" rel="stylesheet" />
 
+<!--star-->
+ 
 
+<link href="css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    
+    <script src="js/star-rating.min.js" type="text/javascript"></script>
 
 
 
 
 <style type="text/css">
+.form-control:focus{
+  border-color: #00AF66;  box-shadow: none; -webkit-box-shadow: none;
+} 
 	#menu:hover{
 		background-color: black;
 		
@@ -154,6 +167,11 @@
          
          <div class="single_post_content">
             <h2 style="background-color: #00AF66"><span style="background-color:#003000">How to Make</span></h2>
+
+            <?php 
+    
+            echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . $_SESSION["logusername"] . "</label> wishing you all the best!ahaha</h3>";
+            ?>
             <div class="slick_slider">
          <div class="left_content">
           <div class="single_page">
@@ -269,7 +287,7 @@
                     	<img id="profpic" src="images/team/clets.jpg">
                     <div style="color:#00AF66" class="author-contet" align="center">
                       <h3 >Cleton Caoile</h3>
-                      <a style="color:#00AF66" href="#">Edit Profile</a>
+                     
                     </div>
                   </div>
                   <div class="info project-name">
@@ -281,9 +299,15 @@
                   <div class="info category">
                     <span style="color:#003000">Category: <em style="color:#00AF66">Furniture</em></span>
                   </div>
-               <div class="info category">
-                    <span style="color:#003000">Ratings: <em style="color:#00AF66">Star star</em></span>
-                  </div>
+              
+                        <table>
+                          <tr>
+                            <td> Ratings:</td>
+                            <td> <input value="<?= getRatingByProductId(connect(), 2); ?>" type="number" class="rating" min=0 max=5 step=0.1 data-size="md" data-stars="5" productId=2></td>
+                          </tr>
+                        </table>
+
+
                 </div>
            
 
@@ -342,10 +366,33 @@
 
         
       </footer>
-	
+	<script type="text/javascript">
+  $(function(){
+               $('.rating').on('rating.change', function(event, value, caption) {
+                productId = $(this).attr('productId');
+                $.ajax({
+                  url: "rating.php",
+                  dataType: "json",
+                  data: {vote:value, productId:productId, type:'save'},
+                  success: function( data ) {
+                     alert("rating saved");
+                  },
+              error: function(e) {
+                 alert("Can't saved");
+                console.log(e);
+              },
+              timeout: 30000  
+            });
+              });
+
+           
+
+
+        });
+</script>
 </body>
 </html>
-<script src="assets/js/jquery.min.js"></script> 
+
 <script src="assets/js/wow.min.js"></script> 
 <script src="assets/js/bootstrap.min.js"></script> 
 <script src="assets/js/slick.min.js"></script> 
