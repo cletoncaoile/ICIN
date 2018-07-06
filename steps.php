@@ -16,11 +16,11 @@ $row=mysqli_fetch_assoc($result);
 
 
 $idcraft= $row['idcraft'];
-$craftmethod=addslashes($_POST['craftmethod']);
+
 $craftsteppic=addslashes(file_get_contents($_FILES["craftsteppic"]["tmp_name"]));
 $craftstep=addslashes($_POST['craftstep']);
   
-  $sql="INSERT INTO tbsteps(noofstep,method,stepphoto,steps,idcraft)VALUES('$noofstep','$craftmethod','$craftsteppic','$craftstep','$idcraft')";
+  $sql="INSERT INTO tbsteps(noofstep,stepphoto,steps,idcraft)VALUES('$noofstep','$craftsteppic','$craftstep','$idcraft')";
 
     if(mysqli_query($con,$sql)){
       echo '<script>alert("Add more Steps if not press finish button")</script>'; 
@@ -168,15 +168,20 @@ $craftstep=addslashes($_POST['craftstep']);
           <div class="col-sm-11">
              <div class="latest_newsarea" style="background-color: #00AF66"> <span style="background-color:#003000">Recently Uploaded</span>
           <ul id="ticker01" class="news_sticker">
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
-            <li><a href="craftview"><img src="images/team/cleton.jpg" alt="">Kaka Upload na Craft</a></li>
+             <?php
+             require 'db.php'; 
+            
+            $sqlrecent="SELECT * FROM tbcraft  ORDER BY idcraft DESC";
+            $resultrecent=mysqli_query($con,$sqlrecent);
+            while($row = mysqli_fetch_array($resultrecent)){
+              echo "<li><a href='craftview'>";
+               echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
+              echo "".$row['namecraft']."</a></li>";
+
+            }
+
+            ?>
+            
           </ul>
          
         </div>
@@ -185,7 +190,6 @@ $craftstep=addslashes($_POST['craftstep']);
             <a class="btn btn-danger" href="logout">Logout</a>
           </div>
         </div>
-
 
         <section id="sliderSection">
     <br><div class="row">
@@ -197,14 +201,13 @@ $craftstep=addslashes($_POST['craftstep']);
                <form method="post" enctype="multipart/form-data">
             
             
-              <div class="input-group" id="craftmethod1">
-          <span class="input-group-addon btn btn-success"disabled>Method</span><textarea rows="3" class="form-control" placeholder="Procedure" id="craftmethod" name="craftmethod" value="<?php echo isset($_POST['craftmethod']) ? $_POST['craftmethod'] : '' ?>"></textarea>
-        </div>
+              
               <br><input class="form-control" type="file" name="craftsteppic" id="craftsteppic">
               <br>
               <div class="input-group">
-              <span class="input-group-addon btn btn-green"disabled>Step<br><label id="noofstep"></label></span><textarea rows="3" class="form-control" placeholder="Step by step" id="craftstep" name="craftstep"></textarea>
+              <span class="input-group-addon btn btn-green"disabled>Title Step<br><label id="noofstep"></label></span><textarea rows="3" class="form-control" placeholder="Step by step" id="craftstep" name="craftstep"></textarea>
              </div>
+             
 
 
             <input type="hidden" id="noofstep" name="noofstep" value="<?= $noofstep?>" />
@@ -301,11 +304,12 @@ $craftstep=addslashes($_POST['craftstep']);
   $(document).ready(function(){  
       $('#btnuploadsteps').click(function(){
 
-            var craftmethod=$('#craftmethod').val();  
+             
             var craftsteppic=$('#craftsteppic').val();
             var craftstep=$('#craftstep').val();
-           var noofstep=$('#noofstep').val();
-           
+             var noofstep=$('#noofstep').val();
+          
+            
             
         
             
@@ -322,8 +326,18 @@ $craftstep=addslashes($_POST['craftstep']);
            else if(craftstep == '')  
            {  
               
-                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please fill up Step by step</div>";
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please fill up Step Title</div>";
                 document.getElementById("craftstep").focus();
+                 $("#message").fadeIn();
+                $("#message").fadeOut(5000);
+
+                return false;  
+           } 
+             else if(craftstepdesc == '')  
+           {  
+              
+                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please fill up Step Description</div>";
+                document.getElementById("craftstepdesc").focus();
                  $("#message").fadeIn();
                 $("#message").fadeOut(5000);
 

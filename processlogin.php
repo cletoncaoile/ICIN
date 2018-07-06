@@ -14,7 +14,13 @@
 			if (mysqli_num_rows($result) > 0) {
 				while($row=mysqli_fetch_row($result)){
 					$_SESSION['logusername'] = $row[0];
-				echo "Success";
+					if($row[7]=="User"){
+						echo "Success";
+					}
+					else if($row[7]=="Admin"){
+						echo "Success1";
+					}
+				
 			}
 				
 			}

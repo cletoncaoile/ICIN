@@ -188,13 +188,20 @@
       if (xmlhttp.readyState === 4){
           var response = xmlhttp.responseText;
           if (xmlhttp.status === 200 && response === "Success") {
-             document.getElementById('message').innerHTML = "<div class=\"alert alert-danger\" role=\"alert\"> <strong>Successfully</strong>Login  </div>";
+             document.getElementById('message').innerHTML = "<div class=\"alert alert-success\" role=\"alert\"> <strong>Successfully</strong>Login  </div>";
+            
           location.href = "mainmenu";
           
-          }   
-         document.getElementById('message').innerHTML = "<div class=\"alert alert-danger\" role=\"alert\"> <strong>Oops!</strong> Incorrect Username or Password. </div>";
+          }
+          else if(xmlhttp.status === 200 && response === "Success1"){
+             location.href = "admin";
+          }
+          else{
+             document.getElementById('message').innerHTML = "<div class=\"alert alert-danger\" role=\"alert\"> <strong>Oops!</strong> Incorrect Username or Password. </div>";
           $("#message").fadeIn();
                 $("#message").fadeOut(5000);
+          }   
+        
         }
     }
 

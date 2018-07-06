@@ -98,7 +98,7 @@ if (!isset($_SESSION["logusername"])){
             	<li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
             	<li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Upload Item</a>
             		<ul id="menu1" class="dropdown-menu" role="menu">
-              			<li><a id="m" href="uploadcraft">Crafted Item</a></li>
+              			<li><a id="m" href="uploadcraft?id=">Crafted Item</a></li>
               			
              		</ul>
 			 	</li>
@@ -148,7 +148,7 @@ if (!isset($_SESSION["logusername"])){
             $sqlrecent="SELECT * FROM tbcraft ORDER BY idcraft DESC";
             $resultrecent=mysqli_query($con,$sqlrecent);
             while($row = mysqli_fetch_array($resultrecent)){
-              echo "<li><a href='craftview'>";
+              echo "<li><a href='craftview?id=".$row['idcraft']."'>";
                echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
               echo "".$row['namecraft']."</a></li>";
 
@@ -178,7 +178,7 @@ if (!isset($_SESSION["logusername"])){
            <div class="container-fluid">
               <?php 
     
-            echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . $_SESSION["logusername"] . "</label> wishing you all the best!ahaha</h3>";
+            echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . ucfirst($_SESSION["logusername"]) . "</label> wishing you all the best!ahaha</h3>";
             ?>
            </div>
              
@@ -215,7 +215,7 @@ if (!isset($_SESSION["logusername"])){
             <?php 
             require 'db.php';
           if($con){
-             $sqldisplay="SELECT * FROM tbcraft";
+             $sqldisplay="SELECT * FROM tbcraft WHERE status='For Sale'";
           $resultdisplay=mysqli_query($con,$sqldisplay);
           while($row=mysqli_fetch_array($resultdisplay)){
             echo "<ul class='photograph_nav  wow fadeInDown'>";
@@ -223,7 +223,7 @@ if (!isset($_SESSION["logusername"])){
               echo "<div class='photo_grid'>";
               echo "<figure class='effect-layla'>";
               echo "<p id='prod'>".$row['namecraft']."<br>".$row['category']."</p>";
-              echo " <a class='fancybox-buttons' data-fancybox-group='button' href='craftview' title='Photography Ttile 1'>";
+              echo " <a class='fancybox-buttons' data-fancybox-group='button' href='craftview?id=".$row['idcraft']."' title='Photography Ttile 1'>";
              echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
               echo "</a> </figure>";
               echo "</div>";
@@ -252,7 +252,7 @@ if (!isset($_SESSION["logusername"])){
               require 'db.php';
               if($con){
 
-                $sqldisplayuser="SELECT SUM(tbcraft.idcraft),tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
+                $sqldisplayuser="SELECT SUM(tbcraft.idcraft),count(tbcraft.idcraft) as count,tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
                 $resultuser=mysqli_query($con,$sqldisplayuser);
                 while($row=mysqli_fetch_array($resultuser)){
                   echo "<li>";
@@ -260,7 +260,7 @@ if (!isset($_SESSION["logusername"])){
                   echo "<a href='#' class='media-left'>";
                   echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
                   echo "</a>";
-                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#00AF66;'>".$row['fn']."  ".$row['ln']."  </a> </div>";
+                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#003000;'><strong>".$row['fn']."  ".$row['ln']." </strong> </a><br><label style='color:#00AF66'><strong>".$row['count']." Craft Shared</strong></label></div>";
                   echo " </div>";
                   echo "</li>";
                 }
@@ -371,7 +371,7 @@ include 'locations_model.php';
                     lng:120.5736
                 },
                 map:map,
-                draggable:false
+                draggable:true
              });
 
         var searchBox = new google.maps.places.SearchBox(document.getElementById('mapsearch'));
