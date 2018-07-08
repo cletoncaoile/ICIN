@@ -12,6 +12,10 @@
        #signlog{
         color: #00AF66;
        }
+       #recentimage:hover{
+        width: 200px;
+        height:1000px;
+       }
     </style>
    
     <div class="row"><br>
@@ -24,7 +28,7 @@
             $sqlrecent="SELECT * FROM tbcraft ORDER BY idcraft DESC";
             $resultrecent=mysqli_query($con,$sqlrecent);
             while($row = mysqli_fetch_array($resultrecent)){
-              echo "<li><a href='craftview'>";
+              echo "<li><a href='craftview1?id=".$row['idcraft']."'>";
                echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
               echo "".$row['namecraft']."</a></li>";
 

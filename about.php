@@ -62,9 +62,9 @@
             
             <ul class="top_nav">
               <li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
-              <li><a id="menu" href="index">Home</a></li>
+              <li><a id="menu" href="index?id=">Home</a></li>
               <li class="active"><a id="menu" href="about">About</a></li>
-              <li><a id="menu" href="contact">Contact</a></li>
+              <li><a id="menu" href="contact?id=">Contact</a></li>
       
             </ul>
           </div>
@@ -94,8 +94,8 @@
               <div class="single_post_content">
                <ul class="business_catgnav wow fadeInDown">
                   <li>
-                    <figure class="bsbig_fig"> <a href="pages/single_page.html" class="featured_img"> <img alt="" src="images/team/shaira.jpg"> <span class="overlay"></span> </a>
-                      <figcaption> <a href="pages/single_page.html"><span id="team">Shaira Lozano</span></a> </figcaption>
+                    <figure class="bsbig_fig"> <a href="https://www.facebook.com/shairaerica.lozano.5" class="featured_img"> <img alt="" src="images/team/shaira.jpg"> <span class="overlay"></span> </a>
+                      <figcaption> <a href="https://www.facebook.com/shairaerica.lozano.5"><span id="team">Shaira Lozano</span></a> </figcaption>
                       <p>Kahit ano gusto mung sabihin.</p>
                     </figure>
                   </li>
@@ -107,8 +107,8 @@
               <div class="single_post_content">
                 <ul class="business_catgnav">
                   <li>
-                    <figure class="bsbig_fig wow fadeInDown"> <a href="pages/single_page.html" class="featured_img"> <img alt="" src="images/team/clets.jpg"> <span class="overlay"></span> </a>
-                      <figcaption> <a href="pages/single_page.html"><span id="team">Cleton Caoile</span></a> </figcaption>
+                    <figure class="bsbig_fig wow fadeInDown"> <a href="https://www.facebook.com/cleton.caoile" class="featured_img"> <img alt="" src="images/team/clets.jpg"> <span class="overlay"></span> </a>
+                      <figcaption> <a href="https://www.facebook.com/cleton.caoile"><span id="team">Cleton Caoile</span></a> </figcaption>
                       <p>Tools & Inspiration From Your Recycling Guide</p>
                       <p>WHY “When man wants to live in balance with nature, recycling is a necessity.”</p>
                     </figure>
@@ -124,8 +124,8 @@
               <div class="single_post_content">
                <ul class="business_catgnav wow fadeInDown">
                   <li>
-                    <figure class="bsbig_fig"> <a href="pages/single_page.html" class="featured_img"> <img alt="" src="images/team/dianaa.jpg"> <span class="overlay"></span> </a>
-                      <figcaption> <a href="pages/single_page.html"><span id="team">Diana De Vera</span></a> </figcaption>
+                    <figure class="bsbig_fig"> <a href="https://www.facebook.com/dianarose.devera.1" class="featured_img"> <img alt="" src="images/team/dianaa.jpg"> <span class="overlay"></span> </a>
+                      <figcaption> <a href="https://www.facebook.com/dianarose.devera.1"><span id="team">Diana De Vera</span></a> </figcaption>
                       <p>Kahit ano gusto mung sabihin.</p>
                     </figure>
                   </li>
@@ -137,8 +137,8 @@
               <div class="single_post_content">
                 <ul class="business_catgnav">
                   <li>
-                    <figure class="bsbig_fig wow fadeInDown"> <a href="pages/single_page.html" class="featured_img"> <img alt="" src="images/team/JA.jpg"> <span class="overlay"></span> </a>
-                      <figcaption> <a href="pages/single_page.html"><span id="team">Julie Dela Cruz</span></a> </figcaption>
+                    <figure class="bsbig_fig wow fadeInDown"> <a href="https://www.facebook.com/julieann.delacruz24" class="featured_img"> <img alt="" src="images/team/JA.jpg"> <span class="overlay"></span> </a>
+                      <figcaption> <a href="https://www.facebook.com/julieann.delacruz24"><span id="team">Julie Dela Cruz</span></a> </figcaption>
                       <p>Kahit ano gusto mung sabihin din</p>
                     </figure>
                   </li>
@@ -153,8 +153,8 @@
               <div class="single_post_content">
                <ul class="business_catgnav wow fadeInDown">
                   <li>
-                    <figure class="bsbig_fig"> <a href="pages/single_page.html" class="featured_img"> <img alt="" src="images/team/deguzman.jpg"> <span class="overlay"></span> </a>
-                      <figcaption> <a href="pages/single_page.html"><spa id="team"n>Jd De Guzman</span></a> </figcaption>
+                    <figure class="bsbig_fig"> <a href="https://www.facebook.com/denmark.deguzman.507" class="featured_img"> <img alt="" src="images/team/deguzman.jpg"> <span class="overlay"></span> </a>
+                      <figcaption> <a href="https://www.facebook.com/denmark.deguzman.507"><spa id="team"n>Jhaydee De Guzman</span></a> </figcaption>
                       <p>Kahit ano gusto mung sabihin.</p>
                     </figure>
                   </li>
@@ -166,8 +166,8 @@
               <div class="single_post_content">
                 <ul class="business_catgnav">
                   <li>
-                    <figure class="bsbig_fig wow fadeInDown"> <a href="pages/single_page.html" class="featured_img"> <img alt="" src="images/team/aliah.jpg"> <span class="overlay"></span> </a>
-                      <figcaption> <a href="pages/single_page.html"><span id="team">Alia </span></a> </figcaption>
+                    <figure class="bsbig_fig wow fadeInDown"> <a href="https://www.facebook.com/aliah.liamido" class="featured_img"> <img alt="" src="images/team/aliah.jpg"> <span class="overlay"></span> </a>
+                      <figcaption> <a href="https://www.facebook.com/aliah.liamido"><span id="team">Alia </span></a> </figcaption>
                       <p>Kahit ano gusto mung sabihin din</p>
                     </figure>
                   </li>
@@ -190,11 +190,11 @@
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-             <?php 
+            <?php 
               require 'db.php';
               if($con){
 
-                $sqldisplayuser="SELECT SUM(tbcraft.idcraft),tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
+                $sqldisplayuser="SELECT SUM(tbcraft.idcraft),count(tbcraft.idcraft) as count,tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
                 $resultuser=mysqli_query($con,$sqldisplayuser);
                 while($row=mysqli_fetch_array($resultuser)){
                   echo "<li>";
@@ -202,7 +202,7 @@
                   echo "<a href='#' class='media-left'>";
                   echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
                   echo "</a>";
-                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#00AF66;'>".$row['fn']."  ".$row['ln']."  </a> </div>";
+                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#003000;'><strong>".ucfirst($row['fn'])."  ".ucfirst($row['ln'])." </strong> </a><br><label style='color:#00AF66'>".$row['count']." Craft Shared</label></div>";
                   echo " </div>";
                   echo "</li>";
                 }

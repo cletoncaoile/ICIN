@@ -8,7 +8,7 @@ session_start();
             $date = date('Y-m-d H:i:s');
             $newDateTime = date('h:i A', strtotime($date));
 
-           $sql = "INSERT INTO tbcomment (username, comment, datecomment,idcraft,timecomment) VALUES ('" .$_SESSION['logusername']. "', '" .$combox. "', '" .$date. "', '" .$idcraft. "', '" .$newDateTime. "')";
+           $sql = "INSERT INTO tbcomment (username, comment, datecomment,idcraft,timecomment,status) VALUES ('" .$_SESSION['logusername']. "', '" .$combox. "', '" .$date. "', '" .$idcraft. "', '" .$newDateTime. "','unread')";
 
 if ($con->query($sql) === TRUE) {
     $con->close();

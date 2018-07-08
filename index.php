@@ -66,9 +66,9 @@
             
             <ul class="top_nav">
             	<li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
-              <li class="active"><a id="menu" href="index">Home</a></li>
+              <li class="active"><a id="menu" href="index?id=">Home</a></li>
               <li><a id="menu" href="about">About</a></li>
-              <li><a id="menu" href="contact">Contact</a></li>
+              <li><a id="menu" href="contact?id=">Contact</a></li>
       
             </ul>
           </div>
@@ -123,35 +123,30 @@
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
+               <?php 
+                  require 'db.php';
+                  $idcraft=$_GET['id'];
+
+                  $sqlmost="SELECT tbuser.fn,tbuser.ln,tbuser.username,tbcraft.category, tbcraft.idcraft,tbcraft.namecraft,tbcraft.output1,AVG(tbrating.noofrating) FROM tbcraft INNER JOIN tbrating ON tbcraft.idcraft=tbrating.idcraft INNER JOIN tbuser ON tbuser.username=tbcraft.username GROUP BY tbcraft.idcraft,tbcraft.output1 ORDER BY AVG(tbrating.noofrating) DESC LIMIT 5";
+                  $resultmost=mysqli_query($con,$sqlmost);
+                  while($row=mysqli_fetch_array($resultmost)){
+                    echo" <li>
+                <div class='media'> <a href='#' class='media-left'>";
+                echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/></a>';
+                echo " <div class='media-body'> <a href='craftview1?id=".$row['idcraft']."' class='catg_title' style='color:#003000'><strong>".$row['namecraft']."</strong></a><br><label style='color:#00AF66'><strong>".ucfirst($row['fn']).", ".ucfirst($row['ln'])."<br> ".$row['category']."</strong></label></div>
                 </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
+              </li>";
+                  }
+
+              ?>
+             
+                 
+              
             </ul>
             <div id="next-button"><i class="fa fa-chevron-down"></i></div>
           </div>
         </div>
+        
       </div>
     </div>
   </section>
@@ -174,7 +169,7 @@
               echo "<div class='photo_grid'>";
               echo "<figure class='effect-layla'>";
               echo "<p id='prod'>".$row['namecraft']."<br>".$row['category']."</p>";
-              echo " <a class='fancybox-buttons' data-fancybox-group='button' href='craftview' title='Photography Ttile 1'>";
+              echo " <a class='fancybox-buttons' data-fancybox-group='button' href='craftview1?id=".$row['idcraft']."' title='Photography Ttile 1'>";
              echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
               echo "</a> </figure>";
               echo "</div>";
@@ -197,11 +192,11 @@
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-         		  <?php 
+         		 <?php 
               require 'db.php';
               if($con){
 
-                $sqldisplayuser="SELECT SUM(tbcraft.idcraft),tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
+                $sqldisplayuser="SELECT SUM(tbcraft.idcraft),count(tbcraft.idcraft) as count,tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
                 $resultuser=mysqli_query($con,$sqldisplayuser);
                 while($row=mysqli_fetch_array($resultuser)){
                   echo "<li>";
@@ -209,7 +204,7 @@
                   echo "<a href='#' class='media-left'>";
                   echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
                   echo "</a>";
-                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#00AF66;'>".$row['fn']."  ".$row['ln']."  </a> </div>";
+                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#003000;'><strong>".ucfirst($row['fn'])."  ".ucfirst($row['ln'])." </strong> </a><br><label style='color:#00AF66'>".$row['count']." Craft Shared</label></div>";
                   echo " </div>";
                   echo "</li>";
                 }

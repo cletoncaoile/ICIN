@@ -69,9 +69,9 @@
             
             <ul class="top_nav">
               <li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
-              <li><a id="menu" href="index">Home</a></li>
+              <li><a id="menu" href="index?id=">Home</a></li>
               <li><a id="menu" href="about">About</a></li>
-              <li class="active"><a id="menu" href="contact">Contact</a></li>
+              <li class="active"><a id="menu" href="contact?id=">Contact</a></li>
       
             </ul>
           </div>
@@ -113,31 +113,25 @@
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
+               <?php 
+                  require 'db.php';
+                  $idcraft=$_GET['id'];
+
+                  $sqlmost="SELECT tbuser.fn,tbuser.ln,tbuser.username,tbcraft.category, tbcraft.idcraft,tbcraft.namecraft,tbcraft.output1,AVG(tbrating.noofrating) FROM tbcraft INNER JOIN tbrating ON tbcraft.idcraft=tbrating.idcraft INNER JOIN tbuser ON tbuser.username=tbcraft.username GROUP BY tbcraft.idcraft,tbcraft.output1 ORDER BY AVG(tbrating.noofrating) DESC";
+                  $resultmost=mysqli_query($con,$sqlmost);
+                  while($row=mysqli_fetch_array($resultmost)){
+                    echo" <li>
+                <div class='media'> <a href='#' class='media-left'>";
+                echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/></a>';
+                echo " <div class='media-body'> <a href='craftview1?id=".$row['idcraft']."' class='catg_title' style='color:#003000'><strong>".$row['namecraft']."</strong></a><br><label style='color:#00AF66'><strong>".ucfirst($row['fn']).", ".ucfirst($row['ln'])."<br> ".$row['category']."</strong></label></div>
                 </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
+              </li>";
+                  }
+
+              ?>
+             
+                 
+              
             </ul>
             <div id="next-button"><i class="fa  fa-chevron-down"></i></div>
           </div>

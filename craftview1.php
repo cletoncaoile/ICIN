@@ -1,4 +1,3 @@
-
 <?php 
 session_start();
 require('rating.php');
@@ -75,15 +74,6 @@ require('rating.php');
     height: 100px;
     border-radius: 50%;
 }
-#notif{
-  background-color: #00AF66;
-  color: #ffff;
-}
-#notif:hover{
-  background-color: #003000;
-  color: #ffff;
-}
-
 
 </style>
 
@@ -93,87 +83,30 @@ require('rating.php');
   
 </div>
 <a class="scrollToTop" href="#"><i class="fa fa-angle-up"></i></a>
-	
-
-<header class="navbar navbar-inverse" role="navigation" style="background-color: #00AF66">
-    		<div class="navbar-header">
+  
+   <header class="navbar navbar-inverse" role="navigation" style="background-color: #00AF66">
+        <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
       </div>
 
-    		<div class="row">
-		<div class="col-lg-12 col-md-12 col-sm-12" >
-			 <div id="navbar1" class="navbar-collapse collapse">
+        <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12" >
+       <div id="navbar1" class="navbar-collapse collapse">
         <div class="header_top_right">
             
             <ul class="top_nav">
-            	<li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
-            	<li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Upload Item</a>
-            		<ul id="menu1" class="dropdown-menu" role="menu">
-              			<li><a id="m" href="uploadcraft?id=">Crafted Item</a></li>
-              			
-             		</ul>
-			 	</li>
-			 		<li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Category</a>
-            		<ul id="menu1" class="dropdown-menu" role="menu">
-              			<li><a id="m" href="mainmenu">All Category</a></li>
-              			<li><a id="m" href="mainmenu">Furnitures</a></li>
-              			<li><a id="m" href="mainmenu">Clothes</a></li>
-              			<li><a id="m" href="mainmenu">Decorations</a></li>
-             		</ul>
-			 	</li>
-			 		<li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Craft Store</a>
-            		<ul id="menu1" class="dropdown-menu" role="menu">
-              			<li><a id="m" href="craftstore">Crafted Items</a></li>
-              			
-             		</ul>
-			 	</li>
-       <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Notifications
-        <?php
-            require 'db.php';
-            $idcraft=$_GET['id'];
-            if($con){
-              $sql="SELECT COUNT(tbcomment.idcraft),tbcraft.username from `tbcomment` INNER JOIN `tbcraft` ON tbcraft.idcraft=tbcomment.idcraft where tbcomment.status = 'unread' AND tbcraft.username='".$_SESSION['logusername']."' order by `datecomment` DESC";
-              $result=mysqli_query($con,$sql);
-              if($row=mysqli_fetch_array($result)){
-                echo "<span style='background-color: red' class='badge'>".$row[0]."</a>";
-              }
-            }
-
-         ?>
-         
-           <ul id="menu1" class="dropdown-menu" role="menu">
-            <?php 
-              require 'db.php';
-              $idcraft=$_GET['id'];
-              if($con){
-                $sql="SELECT tbuser.profilepic,tbuser.fn,tbuser.ln,tbcomment.idcraft,tbcomment.comment,tbcomment.datecomment,tbcomment.timecomment,tbcraft.username FROM tbuser INNER JOIN tbcomment ON tbuser.username=tbcomment.username INNER JOIN tbcraft ON tbcraft.idcraft=tbcomment.idcraft WHERE tbcomment.status='unread' AND tbcraft.username='".$_SESSION['logusername']."' ORDER BY idcomment DESC";
-              $result=mysqli_query($con,$sql);
-              while($row=mysqli_fetch_array($result)){
-                echo " <li>
-                <a href='craftview?id=".$row['idcraft']."' id='notif'>";
-                  echo '<img width="30px" height="30px" src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
-                  echo "".$row['fn'].", ".$row['ln']." commented on your post.<br>".$row['datecomment']." at ".$row['timecomment']."</a>
-              </li>";
-              }
-              }
-
-            ?>
-              </ul>
-
-        </li>
-             
-              
-      			
-
+              <li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
+              <li><a id="menu" href="index?id=">Home</a></li>
+              <li class="active"><a id="menu" href="about">About</a></li>
+              <li><a id="menu" href="contact?id=">Contact</a></li>
+      
             </ul>
           </div>
 
           <div class="header_top_right">
 
-			<p>
-				<input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
-			</p>
-			
+      <p><input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
+      </p>
           </div>
         </div>
       </div>
@@ -192,7 +125,7 @@ require('rating.php');
             $sqlrecent="SELECT * FROM tbcraft  ORDER BY idcraft DESC";
             $resultrecent=mysqli_query($con,$sqlrecent);
             while($row = mysqli_fetch_array($resultrecent)){
-              echo "<li><a href='craftview?id=".$row['idcraft']."'>";
+              echo "<li><a href='craftview1?id=".$row['idcraft']."'>";
                echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
               echo "".$row['namecraft']."</a></li>";
 
@@ -204,9 +137,9 @@ require('rating.php');
          
         </div>
           </div>
-          <div class="col-sm-1">
-            <a class="btn btn-danger" href="logout">Logout</a>
-          </div>
+           <div class="col-sm-1">
+        <a class="btn btn-success" href="login">Login</a>
+      </div>
         </div>
        
 
@@ -218,12 +151,7 @@ require('rating.php');
          <div class="single_post_content">
             <h2 style="background-color: #00AF66"><span style="background-color:#003000">How to Make</span></h2>
 
-            <?php 
-
-            echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . ucfirst($_SESSION["logusername"]) . "</label> wishing you all the best!ahaha</h3>";
-             
-
-            ?>
+           
             <div class="slick_slider">
          <div class="left_content">
           <div class="single_page">
@@ -236,7 +164,7 @@ require('rating.php');
                 $resultcarousel=mysqli_query($con,$sqldiscarousel);
                    while($row = mysqli_fetch_array($resultcarousel)){
                     echo"<h1 style='color:#00AF66'>".$row['namecraft']."</h1>";
-                    echo " <div class='post_commentbox' id='com'> <a href='#' id='com'><i class='fa fa-report'></i>Report</a> <span id='com'><i class='fa fa-calendar'></i>".$row['category']."</span> <a id='coms'><i class='fa fa-tags'></i>Comment</a> </div>";
+                    echo " <div class='post_commentbox' id='com'> <a href='#' id='com'><i class='fa fa-report'></i>Report</a> <span id='com'><i class='fa fa-calendar'></i>".$row['category']."</span></div>";
                     echo " <div class='single_page_content'>
                <div class='slick_slider'>
            <div class='slick_slider'>";
@@ -325,39 +253,7 @@ require('rating.php');
              
 </div>
 </div>
-			<h3 style="color:#00AF66">Comment</h3>
-			   <div class="col-sm-12">
-			   	 	<div class="act-time">
-
-           
-                        <div class="activity-body act-in">
-                          <span class="arrow"></span>
-                         <div id="loadhere"></div>
-                       
-                           
-                            
-
-                        </div>
-                        <br>
-
-
-
-                        
-                    <div class="form-group">
-                      <textarea rows="3" class="form-control" placeholder="Write a Comment.." id="combox" name="combox"></textarea>
-                 
-                    </div>
-                    <button type="submit" class="btn btn-info" name="btncomment" id="btncomment" onclick="insertcomment()">Submit</button>
-              
-
-                      </div>
-
-                       
-			   </div>
-
-
-		
-
+			
 
 </div>
 </div>
@@ -420,7 +316,13 @@ require('rating.php');
                             <td><span id="starmessage"></span></td>
                           </tr>
                         </table>
-                  </div>
+                  
+                  
+              
+                       
+
+
+                </div>
            
 
           </div>
@@ -446,7 +348,7 @@ require('rating.php');
                     echo" <li>
                 <div class='media'> <a href='#' class='media-left'>";
                 echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/></a>';
-                echo " <div class='media-body'> <a href='craftview?id=".$row['idcraft']."' class='catg_title' style='color:#003000'><strong>".$row['namecraft']."</strong></a><br><label style='color:#00AF66'><strong>".ucfirst($row['fn']).", ".ucfirst($row['ln'])."<br> ".$row['category']."</strong></label></div>
+                echo " <div class='media-body'> <a href='craftview1?id=".$row['idcraft']."' class='catg_title' style='color:#003000'><strong>".$row['namecraft']."</strong></a><br><label style='color:#00AF66'><strong>".ucfirst($row['fn']).", ".ucfirst($row['ln'])."<br> ".$row['category']."</strong></label></div>
                 </div>
               </li>";
                   }
@@ -501,53 +403,7 @@ $('#coms').click(function(){
 
 
         });
-   function insertcomment(){
-   var combox = document.getElementById("combox").value;
-    var idcraft=<?=json_encode($_GET['id'])?>;
-        if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-              document.getElementById('combox').value="";
-               loadcomment();
-               
-            }
-        };
-            
-    xmlhttp.open("POST","processcomment.php", true);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send("a="+combox+"&id="+idcraft);
-   }
-
-   function loadcomment(){
    
-    var idcraft=<?=json_encode($_GET['id'])?>;
-        if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-              document.getElementById("loadhere").innerHTML = this.responseText;
-               
-               
-            }
-        };
-            
-    xmlhttp.open("POST","loadcomment.php", true);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send("id="+idcraft);
-   }
-
-
 </script>
 </body>
 </html>
