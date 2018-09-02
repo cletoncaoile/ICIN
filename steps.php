@@ -24,6 +24,7 @@ $craftstep=addslashes($_POST['craftstep']);
 
     if(mysqli_query($con,$sql)){
       echo '<script>alert("Add more Steps if not press finish button")</script>'; 
+
     }
     else{
       echo '<script>alert("Failed to Upload")</script>'; 
@@ -127,21 +128,22 @@ $craftstep=addslashes($_POST['craftstep']);
               <li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
               <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Upload Item</a>
                 <ul id="menu1" class="dropdown-menu" role="menu">
-                    <li><a id="m" href="uploadcraft">Crafted Item</a></li>
+                    <li><a id="m" href="uploadcraft?id=">Crafted Item</a></li>
                   
                 </ul>
         </li>
-          <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Category</a>
+          <li class="dropdown"> <a id="menu" name="menu" href="mainmenu?Category=All" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Category</a>
                 <ul id="menu1" class="dropdown-menu" role="menu">
-                    <li><a id="m" href="mainmenu">All Category</a></li>
-                    <li><a id="m" href="mainmenu">Furnitures</a></li>
-                    <li><a id="m" href="mainmenu">Clothes</a></li>
-                    <li><a id="m" href="mainmenu">Decorations</a></li>
+                    <li><a id="m" href="mainmenu?Category=All&id=&idcom=">All Category</a></li>
+                    <li><a id="m" href="mainmenu?Category=Furnitures&id=&idcom=">Furnitures</a></li>
+                    <li><a id="m" href="mainmenu?Category=Clothes&id=&idcom=">Clothes</a></li>
+                    <li><a id="m" href="mainmenu?Category=Decoration&id=&idcom=">Decorations</a></li>
+                    <li><a id="m" href="mainmenu?Category=Others&id=&idcom=">Others</a></li>
                 </ul>
         </li>
           <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Craft Store</a>
                 <ul id="menu1" class="dropdown-menu" role="menu">
-                    <li><a id="m" href="craftstore">Crafted Items</a></li>
+                    <li><a id="m" href="craftstore?id=&idcom=">Crafted Items</a></li>
                     
                 </ul>
         </li>
@@ -154,7 +156,7 @@ $craftstep=addslashes($_POST['craftstep']);
 
           <div class="header_top_right">
 
-      <p><input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
+      <p><input class="form-control" id ="tbsearch" type="text" name="tbsearch" placeholder="Search" onkeyup="loadcrafts()"></input>
       </p>
           </div>
         </div>
@@ -174,7 +176,7 @@ $craftstep=addslashes($_POST['craftstep']);
             $sqlrecent="SELECT * FROM tbcraft  ORDER BY idcraft DESC";
             $resultrecent=mysqli_query($con,$sqlrecent);
             while($row = mysqli_fetch_array($resultrecent)){
-              echo "<li><a href='craftview'>";
+              echo "<li><a href='craftview?id=".$row['idcraft']."&idcom='>";
                echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
               echo "".$row['namecraft']."</a></li>";
 
@@ -202,7 +204,8 @@ $craftstep=addslashes($_POST['craftstep']);
             
             
               
-              <br><input class="form-control" type="file" name="craftsteppic" id="craftsteppic">
+              <br><input class="form-control" type="file" name="craftsteppic" id="craftsteppic"  onchange="loadFile(event)">
+              <img src="img/noimage.jpg" height="100px" width="200px" id="output1"/>
               <br>
               <div class="input-group">
               <span class="input-group-addon btn btn-green"disabled>Title Step<br><label id="noofstep"></label></span><textarea rows="3" class="form-control" placeholder="Step by step" id="craftstep" name="craftstep"></textarea>
@@ -219,7 +222,7 @@ $craftstep=addslashes($_POST['craftstep']);
               <br>
 
               <input class="btn btn-success" type="submit" name="btnuploadsteps" id="btnuploadsteps" value="Save & Continue">
-              <input class="btn btn-success" type="submit" name="btnuploadfinish" id="btnfinish" value="Finish">
+                <a class="btn btn-success" href="mainmenu?Category=All&id=&idcom=">Finish</a>
               
             
              </div>
@@ -241,31 +244,23 @@ $craftstep=addslashes($_POST['craftstep']);
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
+              <?php 
+                  require 'db.php';
+                  $idcraft=$_GET['id'];
+
+                  $sqlmost="SELECT tbuser.fn,tbuser.ln,tbuser.username,tbcraft.category, tbcraft.idcraft,tbcraft.namecraft,tbcraft.output1,AVG(tbrating.noofrating) FROM tbcraft INNER JOIN tbrating ON tbcraft.idcraft=tbrating.idcraft INNER JOIN tbuser ON tbuser.username=tbcraft.username GROUP BY tbcraft.idcraft,tbcraft.output1 ORDER BY AVG(tbrating.noofrating) DESC";
+                  $resultmost=mysqli_query($con,$sqlmost);
+                  while($row=mysqli_fetch_array($resultmost)){
+                    echo" <li>
+                <div class='media'> <a href='#' class='media-left'>";
+                echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/></a>';
+                echo " <div class='media-body'> <a href='craftview?id=".$row['idcraft']."' class='catg_title' style='color:#003000'><strong>".$row['namecraft']."</strong></a><br><label style='color:#00AF66'><strong>".ucfirst($row['fn']).", ".ucfirst($row['ln'])."<br> ".$row['category']."</strong></label></div>
                 </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
-              <li>
-                <div class="media"> <a href="pages/single_page.html" class="media-left"> <img alt="" src="images/team/cleton.jpg"> </a>
-                  <div class="media-body"> <a href="pages/single_page.html" class="catg_title">Most Rated Craft</a> </div>
-                </div>
-              </li>
+              </li>";
+                  }
+
+              ?>
+             
             </ul>
             <div id="next-button"><i class="fa fa-chevron-down"></i></div>
           </div>
@@ -300,7 +295,10 @@ $craftstep=addslashes($_POST['craftstep']);
 <script src="assets/js/jquery.fancybox.pack.js"></script> 
 <script src="assets/js/custom.js"></script>
 <script type="text/javascript">
-
+ var loadFile = function(event) {
+    var output = document.getElementById('output1');
+    output.src = URL.createObjectURL(event.target.files[0]);
+  };
   $(document).ready(function(){  
       $('#btnuploadsteps').click(function(){
 
@@ -366,5 +364,11 @@ $craftstep=addslashes($_POST['craftstep']);
            
       });  
  });  
- 
+  $("#tbsearch").on('keyup', function (e) {
+    var value = $('#tbsearch').val();
+      if (e.keyCode == 13) {
+         window.location.href = "searchpage?id="+value;
+      }
+  });
+
 </script>

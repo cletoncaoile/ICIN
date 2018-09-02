@@ -12,9 +12,9 @@ if (!isset($_SESSION["logusername"])){
                                 $result=mysqli_query($con,$sql);
                                 while($row=mysqli_fetch_array($result)){
                                   echo " <div class='text'>
-                                   <a href='#' class='activity-img'>" ;
+                                   <a href='profile?user=".$row['username']."' class='activity-img'>" ;
                                   echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/></a>';
-                                  echo " <p class='attribution'><a href='#'  style='color:#00AF66'>".ucfirst($row['fn']).", ".ucfirst($row['ln'])." </a> at ".$row['timecomment'].", ".$row['datecomment']."</p>
+                                  echo " <p class='attribution'><a href='profile?user=".$row['username']."'  style='color:#00AF66'>".ucfirst($row['fn']).", ".ucfirst($row['ln'])." </a> at ".$row['timecomment'].", ".$row['datecomment']."</p>
                             <p>".$row['comment']."</p>
                           </div>";
                                 }

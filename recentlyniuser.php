@@ -19,7 +19,7 @@
     </style>
    
     <div class="row"><br>
-      <div class="col-sm-11">
+      <div class="col-sm-10">
         <div class="latest_newsarea" style="background-color: #00AF66"> <span style="background-color:#003000">Recently Uploaded</span>
           <ul id="ticker01" class="news_sticker">
              <?php
@@ -43,7 +43,9 @@
       <div class="col-sm-1">
       	<a class="btn btn-success" href="login">Login</a>
       </div>
- 
+    <div class="col-sm-1">
+        <a style="background-color: #00AF66" class="btn btn-success" href="signup">Sign Up</a>
+      </div>
 
 
     </div>

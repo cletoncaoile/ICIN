@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Contact Us</title>
+  <title>Result</title>
   <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="assets/css/animate.css">
@@ -12,16 +12,21 @@
 <link rel="stylesheet" type="text/css" href="assets/css/theme.css">
 <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
+<!--Banner-->
+   <link rel="stylesheet" href="css/styleko1.css" />
 
 </head>
-<body>
 <style type="text/css">
-.form-control:focus{
+  .form-control:focus{
   border-color: #00AF66;  box-shadow: none; -webkit-box-shadow: none;
+} 
+#prod{
+  color:white;
+  background-color:#00AF66;
 }
   #menu:hover{
   background-color:black;
-
+  
 }
 
 .active{
@@ -41,16 +46,6 @@
   background-color: #00AF66;
 }
 
-#e:hover{
-  background-color:#00AF66;
-  color:#003000;
-  }
-#e{
-  background-color:#003000; 
-
-}
-
-
 </style>
 
 </head>
@@ -60,7 +55,7 @@
 </div>
 <a class="scrollToTop" href="#"><i class="fa fa-angle-up"></i></a>
   
-    <header class="navbar navbar-inverse" role="navigation" style="background-color: #00AF66">
+   <header class="navbar navbar-inverse" role="navigation" style="background-color: #00AF66">
         <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
       </div>
@@ -74,7 +69,7 @@
               <li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
               <li><a id="menu" href="index?id=">Home</a></li>
               <li><a id="menu" href="about">About</a></li>
-              <li class="active"><a id="menu" href="contact?id=">Contact</a></li>
+              <li><a id="menu" href="contact?id=">Contact</a></li>
       
             </ul>
           </div>
@@ -91,37 +86,60 @@
 
   </header>
 
-
-<?php require 'recentlyniuser.php';?>
-
-
-<section id="contentSection">
-    <div class="row">
-        <div class="col-sm-8">
+  
+ <?php require 'recentlyniuser.php';?>
+  <section id="newsSection">
+   <div class="row">
+      <div class="col-sm-8">
         <div class="single_post_content">
-      <h2 style="background-color: #00AF66"><span style="background-color:#003000">Contact Us</span></h2>
-       <!--Our Team-->
-            <p>Fill up properly.</p>
-            <form action="#" class="contact_form">
-              <input class="form-control" type="text" placeholder="Name*">
-              <input class="form-control" type="email" placeholder="Email*">
-              <textarea class="form-control" cols="30" rows="10" placeholder="Message*"></textarea>
-              <input id="e" type="submit" value="Send Message" >
-            </form>
-          </div>
-        </div>
-     
-      <div class="col-lg-4 col-md-4 col-sm-4">
+      <h2 style="background-color: #00AF66"><span style="background-color:#003000">Result</span></h2>
+       <!--Search Result-->
+      <?php
+        if($con){
+        $id=$_GET['id'];
+         $sqldisplay="SELECT * FROM tbcraft WHERE  idcraft LIKE '%".$id."%' OR username LIKE '%".$id."%' OR method LIKE '%".$id."%' OR dateshared LIKE '%".$id."%' OR timeshared LIKE '%".$id."%' OR namecraft LIKE '%".$id."%' OR category LIKE '%".$id."%' OR difficulty LIKE '%".$id."%' OR status LIKE '%".$id."%' OR price LIKE '%".$id."%' OR description LIKE '%".$id."%' OR materials LIKE '%".$id."%'";
+          $resultdisplay=mysqli_query($con,$sqldisplay);
+          if(mysqli_num_rows($resultdisplay)>0){
+             while($row=mysqli_fetch_array($resultdisplay)){
+            echo "<ul class='photograph_nav  wow fadeInDown'>";
+              echo " <li>";
+              echo "<div class='photo_grid'>";
+              echo "<figure class='effect-layla'>";
+              echo "<p id='prod'>".$row['namecraft']."<br>".$row['category']."</p>";
+              echo " <a class='fancybox-buttons' data-fancybox-group='button' href='craftview1?id=".$row['idcraft']."&idcom=' title='Photography Ttile 1'>";
+             echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
+              echo "</a> </figure>";
+              echo "</div>";
+              echo "</li>";
+              echo "</ul>";
+          }
+          }
+          else{
+            echo '<img src="images/noresult.png" style="height: 60%; width: 100%">';
+          }
+         
+        }
+      ?>
+       
+
+       
+
+
+
+    </div>
+  </div>
+
+<div class="col-sm-4">
         <div class="latest_post">
           <h2 style="background-color: #00AF66"><span style="background-color:#003000">Most Popular</span></h2>
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-               <?php 
+             <?php 
                   require 'db.php';
                   $idcraft=$_GET['id'];
 
-                  $sqlmost="SELECT tbuser.fn,tbuser.ln,tbuser.username,tbcraft.category, tbcraft.idcraft,tbcraft.namecraft,tbcraft.output1,AVG(tbrating.noofrating) FROM tbcraft INNER JOIN tbrating ON tbcraft.idcraft=tbrating.idcraft INNER JOIN tbuser ON tbuser.username=tbcraft.username GROUP BY tbcraft.idcraft,tbcraft.output1 ORDER BY AVG(tbrating.noofrating) DESC";
+                  $sqlmost="SELECT tbuser.fn,tbuser.ln,tbuser.username,tbcraft.category, tbcraft.idcraft,tbcraft.namecraft,tbcraft.output1,AVG(tbrating.noofrating) FROM tbcraft INNER JOIN tbrating ON tbcraft.idcraft=tbrating.idcraft INNER JOIN tbuser ON tbuser.username=tbcraft.username GROUP BY tbcraft.idcraft,tbcraft.output1 ORDER BY AVG(tbrating.noofrating) DESC LIMIT 5";
                   $resultmost=mysqli_query($con,$sqlmost);
                   while($row=mysqli_fetch_array($resultmost)){
                     echo" <li>
@@ -133,19 +151,33 @@
                   }
 
               ?>
-             
-                 
-              
             </ul>
-            <div id="next-button"><i class="fa  fa-chevron-down"></i></div>
+            <div id="next-button"><i class="fa fa-chevron-down"></i></div>
           </div>
         </div>
       </div>
-    </div>
-     </div>
-  </section>
 
-   <footer class="text-center" style="color:#ffff; background-color: #00AF66">
+
+    </div>
+<!--banner-->
+
+  <section id="banner">
+        <div class="inner">
+          <h1><em>"YOU ONLY FAIL WHEN YOU STOP TRYING."</em></h1>
+          <h2><em>"You can't live a positive life with a negative mind."</em></h2>
+        </div>
+        <video autoplay loop muted playsinline src="images/video/banner1.mp4"></video>
+      </section>
+
+
+
+  </section>
+   
+
+
+
+
+ <footer class="text-center" style="color:#ffff; background-color: #00AF66">
    © I Craft It Now
   2018 All Rights Reserved.      
 
@@ -166,7 +198,7 @@
   $("#tbsearch").on('keyup', function (e) {
     var value = $('#tbsearch').val();
       if (e.keyCode == 13) {
-         window.location.href = "searchpage1s?id="+value;
+         window.location.href = "searchpage1?id="+value;
       }
   });
 </script>

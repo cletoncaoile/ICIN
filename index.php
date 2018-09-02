@@ -12,13 +12,16 @@
 <link rel="stylesheet" type="text/css" href="assets/css/theme.css">
 <link rel="stylesheet" type="text/css" href="assets/css/style.css">
  <!--Banner-->
-   <link rel="stylesheet" href="css/styleko.css" />
+   <link rel="stylesheet" href="css/styleko1.css" />
 
 
 
 
 
 <style type="text/css">
+.form-control:focus{
+  border-color: #00AF66;  box-shadow: none; -webkit-box-shadow: none;
+} 
 #prod{
   color:white;
   background-color:#00AF66;
@@ -48,7 +51,7 @@
 </style>
 
 </head>
-<body>
+<body onload="allfunction()">
 <div id="wait">
   
 </div>
@@ -75,7 +78,7 @@
 
           <div class="header_top_right">
 
-			<p><input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
+			<p><input class="form-control" id ="tbsearch" type="text" name="tbsearch" placeholder="Search" onkeyup="loadindex()"></input>
 			</p>
           </div>
         </div>
@@ -123,9 +126,9 @@
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-               <?php 
+              <?php 
                   require 'db.php';
-                  $idcraft=$_GET['id'];
+                  //$idcraft=$_GET['id'];
 
                   $sqlmost="SELECT tbuser.fn,tbuser.ln,tbuser.username,tbcraft.category, tbcraft.idcraft,tbcraft.namecraft,tbcraft.output1,AVG(tbrating.noofrating) FROM tbcraft INNER JOIN tbrating ON tbcraft.idcraft=tbrating.idcraft INNER JOIN tbuser ON tbuser.username=tbcraft.username GROUP BY tbcraft.idcraft,tbcraft.output1 ORDER BY AVG(tbrating.noofrating) DESC LIMIT 5";
                   $resultmost=mysqli_query($con,$sqlmost);
@@ -158,28 +161,7 @@
          <div class="single_post_content">
             <h2 style="background-color: #00AF66"><span style="background-color:#003000">Recycled Crafts</span></h2>
             <ul class="photograph_nav  wow fadeInDown">
-              <?php 
-            require 'db.php';
-          if($con){
-             $sqldisplay="SELECT * FROM tbcraft";
-          $resultdisplay=mysqli_query($con,$sqldisplay);
-          while($row=mysqli_fetch_array($resultdisplay)){
-            echo "<ul class='photograph_nav  wow fadeInDown'>";
-              echo " <li>";
-              echo "<div class='photo_grid'>";
-              echo "<figure class='effect-layla'>";
-              echo "<p id='prod'>".$row['namecraft']."<br>".$row['category']."</p>";
-              echo " <a class='fancybox-buttons' data-fancybox-group='button' href='craftview1?id=".$row['idcraft']."' title='Photography Ttile 1'>";
-             echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
-              echo "</a> </figure>";
-              echo "</div>";
-              echo "</li>";
-              echo "</ul>";
-          }
-          }
-              
-              
-            ?>
+            <div id="loadindex"></div>
             </ul>
           </div>
          
@@ -192,10 +174,10 @@
           <div class="latest_post_container">
             <div id="prev-button"><i class="fa fa-chevron-up"></i></div>
             <ul class="latest_postnav">
-         		 <?php 
+         	 <?php 
               require 'db.php';
               if($con){
-
+                
                 $sqldisplayuser="SELECT SUM(tbcraft.idcraft),count(tbcraft.idcraft) as count,tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
                 $resultuser=mysqli_query($con,$sqldisplayuser);
                 while($row=mysqli_fetch_array($resultuser)){
@@ -204,7 +186,7 @@
                   echo "<a href='#' class='media-left'>";
                   echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
                   echo "</a>";
-                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#003000;'><strong>".ucfirst($row['fn'])."  ".ucfirst($row['ln'])." </strong> </a><br><label style='color:#00AF66'>".$row['count']." Craft Shared</label></div>";
+                  echo "<div class='media-body'><br><a href='profile1?user=".$row['username']."' class='catg_title' style='color:#003000;'><strong>".ucfirst($row['fn'])."  ".ucfirst($row['ln'])." </strong> </a><br><label style='color:#00AF66'>".$row['count']." Craft Shared</label></div>";
                   echo " </div>";
                   echo "</li>";
                 }
@@ -246,3 +228,41 @@
 <script src="assets/js/jquery.newsTicker.min.js"></script> 
 <script src="assets/js/jquery.fancybox.pack.js"></script> 
 <script src="assets/js/custom.js"></script>
+<script type="text/javascript">
+    function loadindex(){
+     
+     var search = document.getElementById("tbsearch").value;
+  
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+        
+                document.getElementById("loadindex").innerHTML = this.responseText;
+        
+               
+            }
+        };
+            
+    xmlhttp.open("POST","loadindex.php", true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xmlhttp.send("a="+search);
+ }
+function allfunction(){
+  loadindex();
+
+}
+
+$("#tbsearch").on('keyup', function (e) {
+    var value = $('#tbsearch').val();
+      if (e.keyCode == 13) {
+         window.location.href = "searchpage1?id="+value;
+      }
+  });
+
+</script>

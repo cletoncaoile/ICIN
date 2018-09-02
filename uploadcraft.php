@@ -27,7 +27,7 @@ $newDateTime = date('h:i A', strtotime($date));
     $sql="INSERT INTO tbcraft(username,method,dateshared,timeshared,namecraft,category,difficulty,status,price,output1,output2,output3,output4,video,description,materials,approveordisaprove)VALUES('".$_SESSION['logusername']."','$craftmethod','".$date."','$newDateTime','$craftname','$category','$difficulty','$stat','$price','$outputpic0','$outputpic1','$outputpic2','$outputpic3','$newvideo','$craftdesc','$craftmaterial','0')";
     if(mysqli_query($con,$sql)){
          echo '<script>alert("Successfully Uploaded")</script>'; 
-         header('Location: steps'); 
+         header('Location:steps?id='); 
      }
     else{
         echo '<script>alert("Upload Failed")</script>';  
@@ -101,6 +101,19 @@ $newDateTime = date('h:i A', strtotime($date));
 #btnupload{
   background-color: #00AF66;
 }
+
+#notif{
+  background-color: #00AF66;
+  color: #ffff;
+}
+#notif:hover{
+  background-color: #003000;
+  color: #ffff;
+}
+#notif1{
+  background-color: #000000 ;
+  color: #00AF66;
+}
 </style>
     
  
@@ -122,25 +135,78 @@ $newDateTime = date('h:i A', strtotime($date));
               <li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
               <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Upload Item</a>
                 <ul id="menu1" class="dropdown-menu" role="menu">
-                    <li><a id="m" href="uploadcraft?id=">Crafted Item</a></li>
+                    <li><a id="m" href="uploadcraft?id=&idcom=">Crafted Item</a></li>
                   
                 </ul>
         </li>
-          <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Category</a>
+          <li class="dropdown"> <a id="menu" name="menu" href="mainmenu?Category=All" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Category</a>
                 <ul id="menu1" class="dropdown-menu" role="menu">
-                    <li><a id="m" href="mainmenu">All Category</a></li>
-                    <li><a id="m" href="mainmenu">Furnitures</a></li>
-                    <li><a id="m" href="mainmenu">Clothes</a></li>
-                    <li><a id="m" href="mainmenu">Decorations</a></li>
+                    <li><a id="m" href="mainmenu?Category=All&id=&idcom=">All Category</a></li>
+                    <li><a id="m" href="mainmenu?Category=Furnitures&id=&idcom=">Furnitures</a></li>
+                    <li><a id="m" href="mainmenu?Category=Clothes&id=&idcom=">Clothes</a></li>
+                    <li><a id="m" href="mainmenu?Category=Decoration&id=&idcom=">Decorations</a></li>
+                    <li><a id="m" href="mainmenu?Category=Others&id=&idcom=">Others</a></li>
                 </ul>
         </li>
           <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Craft Store</a>
                 <ul id="menu1" class="dropdown-menu" role="menu">
-                    <li><a id="m" href="craftstore">Crafted Items</a></li>
+                    <li><a id="m" href="craftstore?id=&idcom=">Crafted Items</a></li>
                     
                 </ul>
         </li>
-             
+              <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Notification
+        <?php
+            require 'db.php';
+            $idcraft=$_GET['id'];
+            if($con){
+              $sql="SELECT COUNT(tbcomment.idcraft),tbcraft.username from `tbcomment` INNER JOIN `tbcraft` ON tbcraft.idcraft=tbcomment.idcraft where tbcomment.status = 'unread' AND tbcraft.username='".$_SESSION['logusername']."' order by `datecomment` DESC";
+              $result=mysqli_query($con,$sql);
+              if(mysqli_num_rows($result)>0){
+                  if($row=mysqli_fetch_array($result)){
+                if($row[0]!='0'){
+                  echo "<span style='background-color: red' class='badge'>".$row[0]."</a>";
+                }
+                
+              }
+              }
+
+            
+            
+
+            }
+
+
+         ?>
+         
+           <ul id="menu1" class="dropdown-menu" role="menu">
+            <?php 
+              require 'db.php';
+              $idcraft=$_GET['id'];
+              if($con){
+                $sql="SELECT tbuser.profilepic,tbuser.fn,tbuser.ln,tbcomment.idcomment,tbcomment.idcraft,tbcomment.comment,tbcomment.datecomment,tbcomment.timecomment,tbcraft.username FROM tbuser INNER JOIN tbcomment ON tbuser.username=tbcomment.username INNER JOIN tbcraft ON tbcraft.idcraft=tbcomment.idcraft WHERE tbcomment.status='unread' AND tbcraft.username='".$_SESSION['logusername']."' ORDER BY idcomment DESC";
+              $result=mysqli_query($con,$sql);
+              if(mysqli_num_rows($result)>0){
+                while($row=mysqli_fetch_array($result)){
+                echo " <li>
+                <a href='craftview?id=".$row['idcraft']."&idcom=".$row['idcomment']."' id='notif'>";
+                  echo '<img width="30px" height="30px" src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
+                  echo "".$row['fn'].", ".$row['ln']." commented on your post.<br>".$row['datecomment']." at ".$row['timecomment']."</a>
+              </li>";
+              }
+              }
+              else{
+               echo '<h4 style="color:white;">No Record Yet..</h4>';
+              }
+              
+              $idcomment=$_GET['idcom'];
+              $sqlup="UPDATE tbcomment SET status='read' WHERE idcraft='".$idcraft."' AND idcomment='".$idcomment."'";
+              mysqli_query($con,$sqlup);
+              }
+            ?>
+            
+              </ul>
+
+        </li>
               
             
 
@@ -149,7 +215,7 @@ $newDateTime = date('h:i A', strtotime($date));
 
           <div class="header_top_right">
 
-      <p><input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
+      <p><input class="form-control" id ="tbsearch" type="text" name="" placeholder="Search"></input>
       </p>
           </div>
         </div>
@@ -159,33 +225,7 @@ $newDateTime = date('h:i A', strtotime($date));
   </header>
 
 	
-       <div class="row">
-          <div class="col-sm-11">
-             <div class="latest_newsarea" style="background-color: #00AF66"> <span style="background-color:#003000">Recently Uploaded</span>
-          <ul id="ticker01" class="news_sticker">
-             <?php
-             require 'db.php'; 
-            
-            $sqlrecent="SELECT * FROM tbcraft ORDER BY idcraft DESC";
-            $resultrecent=mysqli_query($con,$sqlrecent);
-            while($row = mysqli_fetch_array($resultrecent)){
-              echo "<li><a href='craftview?id=".$row['idcraft']."'>";
-               echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
-              echo "".$row['namecraft']."</a></li>";
-
-            }
-            mysqli_close($con);
-
-            ?>
-            
-          </ul>
-         
-        </div>
-          </div>
-          <div class="col-sm-1">
-            <a class="btn btn-danger" href="logout">Logout</a>
-          </div>
-        </div>
+       <?php require 'recentlyniloguser.php'; ?>
        
 
 <section id="sliderSection">
@@ -197,15 +237,21 @@ $newDateTime = date('h:i A', strtotime($date));
             <h2 style="background-color: #00AF66"><span style="background-color:#003000">Upload Recycled Craft</span></h2>
             
           <?php 
-    
-            echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . ucfirst($_SESSION["logusername"]) . "</label> wishing you all the best!ahaha</h3>";
-           
+                require 'db.php'; 
+            
+            $sqlrecent="SELECT * FROM tbuser WHERE username='".$_SESSION['logusername']."'";
+            $resultrecent=mysqli_query($con,$sqlrecent);
+            if($row = mysqli_fetch_array($resultrecent)){
+                echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . ucfirst($row['fn']) . " ".ucfirst($row['ln'])."</label> wishing you all the best!ahaha</h3>";
+            }
+            
             ?>
 
             <form method="post" enctype="multipart/form-data">
            	<div class="col-sm-12">
              
            		 <input class="form-control" type="text" name="craftname" id="craftname" placeholder="Name of your recycled project">
+               <div id="errorCraftname"></div>
                
            	</div>
              
@@ -218,6 +264,7 @@ $newDateTime = date('h:i A', strtotime($date));
          <option value="Furnitures">Furnitures</option>
          <option value="Others">Others</option>
  			 </select>
+        <div id="errorCategory"></div>
               </div>
               <div class="col-sm-3">
               	<br><label>Choose Difficulty</label>
@@ -226,6 +273,7 @@ $newDateTime = date('h:i A', strtotime($date));
    			 <option value="Intermediate">Intermediate</option>
    			 <option value="Advance">Advance</option>
    			 </select>
+         <div id="errorDifficulty"></div>
               </div>
               <div class="col-sm-3">
                 
@@ -234,26 +282,51 @@ $newDateTime = date('h:i A', strtotime($date));
     			<option value="For Sale">For Sale</option>
    			 <option value="Not For Sale">Not For Sale</option>
    			</select>
+        
               </div>
              <div id="prices" class="col-sm-3">
              	<br><label id="pricelabel">Price</label>
              	<input class="form-control" type="text" name="price" id="price" placeholder="Price">
+              <div id="errorStatus"></div>
              </div>
-
+             <div class="col-sm-12">
+               <br><label>Choose image of your output Recycled Craft (4 pictures Required)</label>
+             
+             </div>
+             <div class="col-sm-3">
+                <input type="file" name="outputpic0" id="outputpic0" onchange="loadFile0(event)">
+                <br><img src="img/noimage.jpg" height="80px" width="150px" id="output0"/>
+                <div id="erroroutput1"></div>
+              </div>
+              <div class="col-sm-3">
+                <input type="file" name="outputpic1" id="outputpic1" onchange="loadFile1(event)">
+                <br><img src="img/noimage.jpg" height="80px" width="150px" id="output1"/>
+                <div id="erroroutput2"></div>
+              </div>
+              <div class="col-sm-3">
+                <input type="file" name="outputpic2" id="outputpic2" onchange="loadFile2(event)">
+               <br> <img src="img/noimage.jpg" height="80px" width="150px" id="output2"/>
+               <div id="erroroutput3"></div>
+              </div>
+              <div class="col-sm-3">
+                <input type="file" name="outputpic3" id="outputpic3" onchange="loadFile3(event)">
+                <br><img src="img/noimage.jpg" height="80px" width="150px" id="output3"/>
+                <div id="erroroutput4"></div>
+              </div>
+             
 
              <div class="col-sm-12">
-             	<br><label>Choose image of your output Recycled Craft (4 pictures Required)</label>
-             <input class="form-control" type="file" name="outputpic0" id="outputpic0">
-             <br><input class="form-control" type="file" name="outputpic1" id="outputpic1">
-             <br><input class="form-control" type="file" name="outputpic2" id="outputpic2">
-             <br><input class="form-control" type="file" name="outputpic3" id="outputpic3">
-             <br><label>Video</label>
+              <label>Video</label>
              <br><input class="form-control" type="text" id="video" name="video" placeholder="Copy the link of your youtube video">
+             <div id="errorVideo"></div>
              <br><div class="input-group" id="craftmethod1">
           <span class="input-group-addon btn btn-success"disabled>Method</span><textarea rows="3" class="form-control" placeholder="Procedure" id="craftmethod" name="craftmethod"></textarea>
+          <div id="errorMethod"></div>
         </div>
              <br><textarea rows="3" class="form-control"  placeholder="Description"  id="craftdesc" name="craftdesc"></textarea>
+             <div id="errorDesc"></div>
              <br><textarea rows="3" class="form-control" placeholder="Material used" id="craftmaterial" name="craftmaterial"></textarea>
+             <div id="errorMaterial"></div>
          	    
             
           </div>
@@ -269,9 +342,7 @@ $newDateTime = date('h:i A', strtotime($date));
              </div>
 
 
-             <div class="col-sm-12">
-               <div id="message"></div>
-             </div>
+            
               </form>
             
             
@@ -296,14 +367,15 @@ $newDateTime = date('h:i A', strtotime($date));
                   $resultmost=mysqli_query($con,$sqlmost);
                   while($row=mysqli_fetch_array($resultmost)){
                     echo" <li>
-                <div class='media'> <a href='pages/single_page.html' class='media-left'>";
+                <div class='media'> <a href='craftview?id=".$row['idcraft']."&idcom=' class='media-left'>";
                 echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/></a>';
-                echo " <div class='media-body'> <a href='craftview?id=".$row['idcraft']."' class='catg_title' style='color:#003000'><strong>".$row['namecraft']."</strong></a><br><label style='color:#00AF66'>".ucfirst($row['fn']).", ".ucfirst($row['ln'])."<br> ".$row['category']."</label></div>
+                echo " <div class='media-body'> <a href='craftview?id=".$row['idcraft']."&idcom=' class='catg_title' style='color:#003000'><strong>".$row['namecraft']."</strong></a><br><label style='color:#00AF66'><strong>".ucfirst($row['fn']).", ".ucfirst($row['ln'])."<br> ".$row['category']."</strong></label></div>
                 </div>
               </li>";
                   }
 
               ?>
+             
              
              
             </ul>
@@ -333,6 +405,22 @@ $newDateTime = date('h:i A', strtotime($date));
 <script src="assets/js/jquery.fancybox.pack.js"></script> 
 <script src="assets/js/custom.js"></script>
 <script type="text/javascript">
+  var loadFile0 = function(event) {
+    var output = document.getElementById('output0');
+    output.src = URL.createObjectURL(event.target.files[0]);
+  };
+  var loadFile1 = function(event) {
+    var output = document.getElementById('output1');
+    output.src = URL.createObjectURL(event.target.files[0]);
+  };
+  var loadFile2 = function(event) {
+    var output = document.getElementById('output2');
+    output.src = URL.createObjectURL(event.target.files[0]);
+  };
+  var loadFile3 = function(event) {
+    var output = document.getElementById('output3');
+    output.src = URL.createObjectURL(event.target.files[0]);
+  };
 $(document).ready(function() {
     $("#price").keydown(function (e) {
         // Allow: backspace, delete, tab, escape, enter and .
@@ -384,91 +472,104 @@ $(document).ready(function() {
            if(craftname == '')  
            {  
               
-                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please fill up Craft</div>";
+                document.getElementById("errorCraftname").innerHTML = "<div class='alert alert-danger'>Please fill up Name of your Recycled Project.</div>";
                 document.getElementById("craftname").focus();
-                 $("#message").fadeIn();
-                $("#message").fadeOut(5000);
+                 $("#errorCraftname").fadeIn();
+                $("#errorCraftname").fadeOut(5000);
 
                 return false;  
            }  
            else if(category == "All Category")  
            {  
               
-                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose Category</div>";
+                document.getElementById("errorCategory").innerHTML = "<div class='alert alert-danger'>Please Choose Category</div>";
                 document.getElementById("category").focus();
-                 $("#message").fadeIn();
-                $("#message").fadeOut(5000);
+                 $("#errorCategory").fadeIn();
+                $("#errorCategory").fadeOut(5000);
 
                 return false;  
+           }
+            else if($('#stat').val() == 'For Sale')
+           {
+            if($('#price').val()==""){
+              
+               document.getElementById("errorStatus").innerHTML = "<div class='alert alert-danger'>Please fill up the price</div>";
+                document.getElementById("price").focus();
+                 $("#errorStatus").fadeIn();
+                $("#errorStatus").fadeOut(5000);
+
+                return false;  
+            }
            }
         
            else if(outputpic0 == "")  
            {  
               
-                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
+                document.getElementById("erroroutput1").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
                 document.getElementById("outputpic0").focus();
-                 $("#message").fadeIn();
-                $("#message").fadeOut(5000);
+                 $("#erroroutput1").fadeIn();
+                $("#erroroutput1").fadeOut(5000);
 
                 return false;  
            }
             else if(outputpic1 == "")  
            {  
               
-                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
+                document.getElementById("erroroutput2").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
                 document.getElementById("outputpic1").focus();
-                 $("#message").fadeIn();
-                $("#message").fadeOut(5000);
+                 $("#erroroutput2").fadeIn();
+                $("#erroroutput2").fadeOut(5000);
 
                 return false;  
            }
             else if(outputpic2 == "")  
            {  
               
-                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
+                document.getElementById("erroroutput3").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
                 document.getElementById("outputpic2").focus();
-                 $("#message").fadeIn();
-                $("#message").fadeOut(5000);
+                 $("#erroroutput3").fadeIn();
+                $("#erroroutput3").fadeOut(5000);
 
                 return false;  
            }
           else if(outputpic3 == "")  
            {  
               
-                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
+                document.getElementById("erroroutput4").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";
                 document.getElementById("outputpic3").focus();
-                 $("#message").fadeIn();
-                $("#message").fadeOut(5000);
+                 $("#erroroutput4").fadeIn();
+                $("#erroroutput4").fadeOut(5000);
 
                 return false;  
            }
             else if(video == "")  
            {  
               
-                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please Copy the link of your Youtube video</div>";
+                document.getElementById("errorVideo").innerHTML = "<div class='alert alert-danger'>Please Copy the link of your Youtube video</div>";
                 document.getElementById("video").focus();
-                 $("#message").fadeIn();
-                $("#message").fadeOut(5000);
+                 $("#errorVideo").fadeIn();
+                $("#errorVideo").fadeOut(5000);
 
                 return false;  
            }
+          
             else if(craftdesc == "")  
            {  
               
-                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please fill up the Description</div>";
+                document.getElementById("errorDesc").innerHTML = "<div class='alert alert-danger'>Please fill up the Description</div>";
                 document.getElementById("craftdesc").focus();
-                 $("#message").fadeIn();
-                $("#message").fadeOut(5000);
+                 $("#errorDesc").fadeIn();
+                $("#errorDesc").fadeOut(5000);
 
                 return false;  
            }
             else if(craftmaterial == "")  
            {  
               
-                document.getElementById("message").innerHTML = "<div class='alert alert-danger'>Please type the material used</div>";
+                document.getElementById("errorMaterials").innerHTML = "<div class='alert alert-danger'>Please type the material used</div>";
                 document.getElementById("craftmaterial").focus();
-                 $("#message").fadeIn();
-                $("#message").fadeOut(5000);
+                 $("#errorMaterials").fadeIn();
+                $("#errorMaterials").fadeOut(5000);
 
                 return false;  
            }
@@ -510,5 +611,10 @@ $(document).ready(function() {
            
       });  
  });  
-
+ $("#tbsearch").on('keyup', function (e) {
+    var value = $('#tbsearch').val();
+      if (e.keyCode == 13) {
+         window.location.href = "searchpage?id="+value;
+      }
+  });
 </script>

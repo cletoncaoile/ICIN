@@ -33,6 +33,7 @@ if(isset($_REQUEST['type'])) {
 	if($_REQUEST['type'] == 'save') {
 		$noofrating = $_REQUEST['noofrating'];
 		$idcraft = $_GET['idcraft'];
+	
 	      $query = "INSERT INTO tbrating (noofrating,idcraft ) VALUES ('$noofrating','$idcraft' )";
 	      // get connection
 	      $con = connect();

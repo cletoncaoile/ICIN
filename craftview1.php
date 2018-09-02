@@ -26,7 +26,8 @@ require('rating.php');
  
 
 <link href="css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+   <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> --> 
+   <script type="text/javascript" src="assets/jquery.min.js"></script>
     
     <script src="js/star-rating.min.js" type="text/javascript"></script>
 
@@ -105,7 +106,7 @@ require('rating.php');
 
           <div class="header_top_right">
 
-      <p><input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
+      <p><input class="form-control" id ="tbsearch" type="text" name="" placeholder="Search"></input>
       </p>
           </div>
         </div>
@@ -115,14 +116,31 @@ require('rating.php');
   </header>
 
 
-    <div class="row">
-          <div class="col-sm-11">
-             <div class="latest_newsarea" style="background-color: #00AF66"> <span style="background-color:#003000">Recently Uploaded</span>
+    <section id="newsSection">
+    <style type="text/css">
+      #headerM{
+        background-color: #00AF66;
+      }
+      #signlog:hover{
+        color: lightgray;
+       }
+       #signlog{
+        color: #00AF66;
+       }
+       #recentimage:hover{
+        width: 200px;
+        height:1000px;
+       }
+    </style>
+   
+    <div class="row"><br>
+      <div class="col-sm-10">
+        <div class="latest_newsarea" style="background-color: #00AF66"> <span style="background-color:#003000">Recently Uploaded</span>
           <ul id="ticker01" class="news_sticker">
              <?php
              require 'db.php'; 
             
-            $sqlrecent="SELECT * FROM tbcraft  ORDER BY idcraft DESC";
+            $sqlrecent="SELECT * FROM tbcraft ORDER BY idcraft DESC";
             $resultrecent=mysqli_query($con,$sqlrecent);
             while($row = mysqli_fetch_array($resultrecent)){
               echo "<li><a href='craftview1?id=".$row['idcraft']."'>";
@@ -132,15 +150,27 @@ require('rating.php');
             }
 
             ?>
-            
           </ul>
          
         </div>
-          </div>
-           <div class="col-sm-1">
+      </div>
+      
+      <div class="col-sm-1">
         <a class="btn btn-success" href="login">Login</a>
       </div>
-        </div>
+    <div class="col-sm-1">
+        <a style="background-color: #00AF66" class="btn btn-success" href="signup">Sign Up</a>
+      </div>
+
+
+    </div>
+
+      
+      
+
+
+   
+  </section>
        
 
 <section id="sliderSection">
@@ -309,7 +339,7 @@ require('rating.php');
                       <table>
                           <tr>
                             <td style='color:#003000'>Ratings:</td>
-                            <td><input value='<?= getRatingByProductId(connect(), 2); ?>' type='number' class='rating' min=0 max=5 step=0.1 data-size='md' data-stars='5' idcraft=<?=$_GET['id']   ?>></td>
+                            <td><input value='<?= getRatingByProductId(connect(), 2); ?>' type='number' class='rating' min=0 max=5 step=0.1 data-size='md' data-stars='5' idcraft=<?=$_GET['id']   ?> disabled></td>
                             
                           </tr>
                           <tr>
@@ -415,5 +445,14 @@ $('#coms').click(function(){
 <script src="assets/js/jquery.newsTicker.min.js"></script> 
 <script src="assets/js/jquery.fancybox.pack.js"></script> 
 <script src="assets/js/custom.js"></script>
+<script type="text/javascript">
+  $("#tbsearch").on('keyup', function (e) {
+    var value = $('#tbsearch').val();
+      if (e.keyCode == 13) {
+         window.location.href = "searchpage1?id="+value;
+      }
+  });
+
+</script>
 
 

@@ -2,28 +2,35 @@
 <?php  
  require 'db.php';
  if($con){
+
   if(isset($_POST["insert"]))  
  {  
-
   $signusername=addslashes($_POST['signusername']);
   $signfn=addslashes($_POST['signfn']);
   $signln=addslashes($_POST['signln']);
   $signsex=addslashes($_POST['signsex']);
   $file = addslashes(file_get_contents($_FILES["signprofile"]["tmp_name"])); 
-  $signemail=addslashes($_POST['signemail']);
+  $signphone=addslashes($_POST['signphone']);
   $signpassword1=addslashes($_POST['signpassword1']);
    
-      $sql = "INSERT INTO tbuser(username,fn,ln,sex,profilepic,email,password,usertype) VALUES ('$signusername','$signfn','$signln','$signsex','$file','$signemail','".md5($signpassword1)."','User')";  
+      $sql = "INSERT INTO tbuser(username,fn,ln,sex,profilepic,phone,password,usertype) VALUES ('$signusername','$signfn','$signln','$signsex','$file','$signphone','".md5($signpassword1)."','User')";  
       if(mysqli_query($con, $sql))  
       {  
-           echo '<script>alert("Successfully Registered")</script>';  
+           
+           echo "<script>
+alert('Successfully Registered!');
+window.location.href='login';
+</script>";
+
+
       }
       else{
         echo '<script>alert("Username is already taken.")</script>';
       }  
  }  
- }
  
+
+ }
  ?>  
 <!DOCTYPE html>
 <html>
@@ -100,7 +107,7 @@
 
           <div class="header_top_right">
 
-			<p><input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
+			<p><input class="form-control" id ="tbsearch" type="text" name="" placeholder="Search"></input>
 			</p>
           </div>
         </div>
@@ -132,10 +139,12 @@
  <form method="post" enctype="multipart/form-data">
         <div class="col-sm-6">
          <br> <input class="form-control" type="text" name="signfn" id="signfn" placeholder="Enter First Name"  value="<?php echo isset($_POST['signfn']) ? $_POST['signfn'] : '' ?>">
+         <div id="errorFN"></div>
         </div>
 
         <div class="col-sm-6">
          <br> <input class="form-control" type="text" name="signln" id="signln" placeholder="Enter Last Name" value="<?php echo isset($_POST['signln']) ? $_POST['signfn'] : '' ?>">
+         <div id="errorLN"></div>
         </div>
         
         <div class="col-sm-6">
@@ -150,26 +159,32 @@
           <br><label>Choose your profile picture</label><br>
            <input class="form-control" type="file" name="signprofile" id="signprofile">
            <span id="uploaded_image"></span>
+           <div id="errorProfile"></div>
         </div>
         <div class="col-sm-12">
-          <br><input class="form-control" type="text" name="signemail" id="signemail" placeholder="Enter Email" value="<?php echo isset($_POST['signemail']) ? $_POST['signemail'] : '' ?>"><br>
+          <br><input class="form-control" type="text" name="signphone" id="signphone" placeholder="Enter Phone Number" maxlength="11" value="<?php echo isset($_POST['signphone']) ? $_POST['signphone'] : '' ?>"><br>
         </div>
         
         <div class="col-sm-12">
          <input class="form-control" type="text" name="signusername" id="signusername" placeholder="Enter Username" value="<?php echo isset($_POST['signusername']) ? $_POST['signusername'] : '' ?>"><br>
+         <div id="errorusername"></div>
         </div>
         <div class="col-sm-6">
           <input class="form-control" type="password" name="signpassword1" id="signpassword1" placeholder="Enter New Password">
+          <div id="errorpass1"></div>
         </div>
         <div class="col-sm-6">
           <input class="form-control" type="password" name="signpassword2" id="signpassword2" placeholder="Enter Confirm Password"><br>
+          <div id="errorpass2"></div>
         </div>
+
         <div class="col-sm-12">
+          <div id="messages"></div>
           <button class="btn btn-success btn-block" name="insert" id="insert">Sign Up</button>
           <div align="center">
                   <a  href="login"><span id="signlog">Already have an account?</span></a>
                 </div>
-                <div id="messages"></div>
+         
       </form>
         </div>
      
@@ -208,7 +223,23 @@
 <script src="assets/js/custom.js"></script>
 
  <script>  
-
+$(document).ready(function() {
+    $("#signphone").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A, Command+A
+            (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) || 
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+});
  $(document).ready(function(){  
       $('#insert').click(function(){
             var signusername=$('#signusername').val();  
@@ -216,61 +247,52 @@
             var signln = $('#signln').val();
             var signsex=$("#signsex").val()
             var image_name = $('#signprofile').val();
-            var signemail = $('#signemail').val();
+            var signphone = $('#signphone').val();
             var signpassword1 = $('#signpassword1').val();
             var signpassword2 = $('#signpassword2').val();
              var signsex = $('#signsex').val();
            if(signfn == '')  
            {  
                 
-                document.getElementById("messages").innerHTML = "<div class='alert alert-danger'>Please fill up First Name</div>";
+                document.getElementById("errorFN").innerHTML = "<div class='alert alert-danger'>Please fill up First Name</div>";
                 document.getElementById("signfn").focus();
-                 $("#messages").fadeIn();
-                $("#messages").fadeOut(5000);
+                 $("#errorFN").fadeIn();
+                $("#errorFN").fadeOut(5000);
 
                 return false;  
            }  
            else if(signln=='')
            {
-             document.getElementById("messages").innerHTML = "<div class='alert alert-danger'>Please fill up Last Name</div>";
+             document.getElementById("errorLN").innerHTML = "<div class='alert alert-danger'>Please fill up Last Name</div>";
                 document.getElementById("signln").focus();
-                $("#messages").fadeIn();
-                $("#messages").fadeOut(5000);
+                $("#errorLN").fadeIn();
+                $("#errorLN").fadeOut(5000);
                 return false;  
 
-           }
-          
-          else if(signemail=='')
-           {
-             document.getElementById("messages").innerHTML = "<div class='alert alert-danger'>Please fill up Email Address</div>";
-                document.getElementById("signemail").focus();
-                 $("#messages").fadeIn();
-                $("#messages").fadeOut(5000);
-                return false;  
            }
            
           else if(signusername=='')
            {
-             document.getElementById("messages").innerHTML = "<div class='alert alert-danger'>Please fill up Username</div>";
+             document.getElementById("errorusername").innerHTML = "<div class='alert alert-danger'>Please fill up Username</div>";
                 document.getElementById("signusername").focus();
-                 $("#messages").fadeIn();
-                $("#messages").fadeOut(5000);
+                 $("#errorusername").fadeIn();
+                $("#errorusername").fadeOut(5000);
                 return false;  
            }
           else if(signpassword1=='')
            {
-             document.getElementById("messages").innerHTML = "<div class='alert alert-danger'>Please fill up New Password</div>";
+             document.getElementById("errorpass1").innerHTML = "<div class='alert alert-danger'>Please fill up New Password</div>";
                 document.getElementById("signpassword1").focus();
-                 $("#messages").fadeIn();
-                $("#messages").fadeOut(5000);
+                 $("#errorpass1").fadeIn();
+                $("#errorpass1").fadeOut(5000);
                 return false;  
            }
            else if(signpassword2=='')
            {
-             document.getElementById("messages").innerHTML = "<div class='alert alert-danger'>Please fill up Confirm Password</div>";
+             document.getElementById("errorpass2").innerHTML = "<div class='alert alert-danger'>Please fill up Confirm Password</div>";
                 document.getElementById("signpassword2").focus();
-                 $("#messages").fadeIn();
-                $("#messages").fadeOut(5000);
+                 $("#errorpass2").fadeIn();
+                $("#errorpass2").fadeOut(5000);
                 return false;  
            }
            else if(signpassword1!=signpassword2)
@@ -283,14 +305,23 @@
            }
            else  
            {  
-                var extension = $('#signprofile').val().split('.').pop().toLowerCase();  
+                 var extension = $('#signprofile').val().split('.').pop().toLowerCase();  
                 if(jQuery.inArray(extension, ['gif','png','jpg','jpeg']) == -1)  
                 {  
-                     document.getElementById("messages").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";  
-                     $('#signprofile').val('');  
+                     document.getElementById("errorProfile").innerHTML = "<div class='alert alert-danger'>Please Choose valid Image File</div>";  
+                      document.getElementById("signprofile").focus();
+                    $("#errorProfile").fadeIn();
+                    $("#errorProfile").fadeOut(5000);
                      return false;  
                 }  
            }  
       });  
  });  
+
+ $("#tbsearch").on('keyup', function (e) {
+    var value = $('#tbsearch').val();
+      if (e.keyCode == 13) {
+         window.location.href = "searchpage1?id="+value;
+      }
+  });
  </script>  

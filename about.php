@@ -13,10 +13,13 @@
 <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
 <!--Banner-->
-   <link rel="stylesheet" href="css/styleko.css" />
+   <link rel="stylesheet" href="css/styleko1.css" />
 
 </head>
 <style type="text/css">
+.form-control:focus{
+  border-color: #00AF66;  box-shadow: none; -webkit-box-shadow: none;
+}
   #menu:hover{
   background-color:black;
 
@@ -69,9 +72,10 @@
             </ul>
           </div>
 
+          
           <div class="header_top_right">
 
-      <p><input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
+      <p><input class="form-control" id ="tbsearch" type="text" name="tbsearch" placeholder="Search"></input>
       </p>
           </div>
         </div>
@@ -109,8 +113,8 @@
                   <li>
                     <figure class="bsbig_fig wow fadeInDown"> <a href="https://www.facebook.com/cleton.caoile" class="featured_img"> <img alt="" src="images/team/clets.jpg"> <span class="overlay"></span> </a>
                       <figcaption> <a href="https://www.facebook.com/cleton.caoile"><span id="team">Cleton Caoile</span></a> </figcaption>
-                      <p>Tools & Inspiration From Your Recycling Guide</p>
-                      <p>WHY “When man wants to live in balance with nature, recycling is a necessity.”</p>
+                      <p style="color:#00AF66;">Tools & Inspiration From Your Recycling Guide</p>
+                      <p style="color:#00AF66;">WHY “When man wants to live in balance with nature, recycling is a necessity.”</p>
                     </figure>
                   </li>
                 </ul>
@@ -193,7 +197,7 @@
             <?php 
               require 'db.php';
               if($con){
-
+                
                 $sqldisplayuser="SELECT SUM(tbcraft.idcraft),count(tbcraft.idcraft) as count,tbuser.username,tbuser.fn,tbuser.ln,tbuser.profilepic FROM tbcraft INNER JOIN tbuser ON tbcraft.username=tbuser.username GROUP BY username ORDER BY SUM(idcraft) DESC LIMIT 10";
                 $resultuser=mysqli_query($con,$sqldisplayuser);
                 while($row=mysqli_fetch_array($resultuser)){
@@ -202,7 +206,7 @@
                   echo "<a href='#' class='media-left'>";
                   echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
                   echo "</a>";
-                  echo "<div class='media-body'><br><a href='pages/single_page.html' class='catg_title' style='color:#003000;'><strong>".ucfirst($row['fn'])."  ".ucfirst($row['ln'])." </strong> </a><br><label style='color:#00AF66'>".$row['count']." Craft Shared</label></div>";
+                  echo "<div class='media-body'><br><a href='profile1?user=".$row['username']."' class='catg_title' style='color:#003000;'><strong>".ucfirst($row['fn'])."  ".ucfirst($row['ln'])." </strong> </a><br><label style='color:#00AF66'>".$row['count']." Craft Shared</label></div>";
                   echo " </div>";
                   echo "</li>";
                 }
@@ -252,3 +256,11 @@
 <script src="assets/js/jquery.newsTicker.min.js"></script> 
 <script src="assets/js/jquery.fancybox.pack.js"></script> 
 <script src="assets/js/custom.js"></script>
+<script type="text/javascript">
+  $("#tbsearch").on('keyup', function (e) {
+    var value = $('#tbsearch').val();
+      if (e.keyCode == 13) {
+         window.location.href = "searchpage1?id="+value;
+      }
+  });
+</script>

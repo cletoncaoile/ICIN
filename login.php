@@ -58,7 +58,7 @@
             
             <ul class="top_nav">
               <li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
-              <li class="active"><a id="menu" href="index">Home</a></li>
+              <li class="active"><a id="menu" href="index?id=">Home</a></li>
               <li><a id="menu" href="about">About</a></li>
               <li><a id="menu" href="contact">Contact</a></li>
       
@@ -67,7 +67,8 @@
 
           <div class="header_top_right">
 
-      <p><input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
+      <p><input class="form-control" id ="tbsearch" type="text" name="" placeholder="Search"></input>
+        
       </p>
           </div>
         </div>
@@ -190,11 +191,11 @@
           if (xmlhttp.status === 200 && response === "Success") {
              document.getElementById('message').innerHTML = "<div class=\"alert alert-success\" role=\"alert\"> <strong>Successfully</strong>Login  </div>";
             
-          location.href = "mainmenu";
+          location.href = "mainmenu?Category=All&id=";
           
           }
           else if(xmlhttp.status === 200 && response === "Success1"){
-             location.href = "admin";
+             location.href = "2137190/users";
           }
           else{
              document.getElementById('message').innerHTML = "<div class=\"alert alert-danger\" role=\"alert\"> <strong>Oops!</strong> Incorrect Username or Password. </div>";
@@ -213,7 +214,13 @@
 
 
    
- 
+ $("#tbsearch").on('keyup', function (e) {
+    var value = $('#tbsearch').val();
+      if (e.keyCode == 13) {
+         window.location.href = "searchpage1?id="+value;
+      }
+  });
+
   
 </script>
 

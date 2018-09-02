@@ -27,7 +27,10 @@ require('rating.php');
  
 
 <link href="css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> --> 
+   <script type="text/javascript" src="assets/jquery.min.js"></script>
+    
     
     <script src="js/star-rating.min.js" type="text/javascript"></script>
 
@@ -83,6 +86,11 @@ require('rating.php');
   background-color: #003000;
   color: #ffff;
 }
+#notif1{
+  background-color: #000000 ;
+  color: #00AF66;
+}
+
 
 
 </style>
@@ -109,35 +117,47 @@ require('rating.php');
             	<li><img src="images/logo.png" style="height: 80px; width: 150px"></li>
             	<li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Upload Item</a>
             		<ul id="menu1" class="dropdown-menu" role="menu">
-              			<li><a id="m" href="uploadcraft?id=">Crafted Item</a></li>
+              			<li><a id="m" href="uploadcraft?id=&idcom=">Crafted Item</a></li>
               			
              		</ul>
 			 	</li>
 			 		<li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Category</a>
             		<ul id="menu1" class="dropdown-menu" role="menu">
-              			<li><a id="m" href="mainmenu">All Category</a></li>
-              			<li><a id="m" href="mainmenu">Furnitures</a></li>
-              			<li><a id="m" href="mainmenu">Clothes</a></li>
-              			<li><a id="m" href="mainmenu">Decorations</a></li>
-             		</ul>
+                    <li><a id="m" href="mainmenu?Category=All&id=&idcom=">All Category</a></li>
+                    <li><a id="m" href="mainmenu?Category=Furnitures&id=&idcom=">Furnitures</a></li>
+                    <li><a id="m" href="mainmenu?Category=Clothes&id=&idcom=">Clothes</a></li>
+                    <li><a id="m" href="mainmenu?Category=Decoration&id=&idcom=">Decorations</a></li>
+                    <li><a id="m" href="mainmenu?Category=Others&id=&idcom=">Others</a></li>
+                </ul>
 			 	</li>
-			 		<li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Craft Store</a>
-            		<ul id="menu1" class="dropdown-menu" role="menu">
-              			<li><a id="m" href="craftstore">Crafted Items</a></li>
-              			
-             		</ul>
-			 	</li>
-       <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Notifications
+			 	 <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Craft Store</a>
+                <ul id="menu1" class="dropdown-menu" role="menu">
+                    <li><a id="m" href="craftstore?id=&idcom=">Crafted Items</a></li>
+                    
+                </ul>
+        </li>
+        
+       <li class="dropdown"> <a id="menu" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Notification
         <?php
             require 'db.php';
             $idcraft=$_GET['id'];
             if($con){
               $sql="SELECT COUNT(tbcomment.idcraft),tbcraft.username from `tbcomment` INNER JOIN `tbcraft` ON tbcraft.idcraft=tbcomment.idcraft where tbcomment.status = 'unread' AND tbcraft.username='".$_SESSION['logusername']."' order by `datecomment` DESC";
               $result=mysqli_query($con,$sql);
-              if($row=mysqli_fetch_array($result)){
-                echo "<span style='background-color: red' class='badge'>".$row[0]."</a>";
+              if(mysqli_num_rows($result)>0){
+                  if($row=mysqli_fetch_array($result)){
+                if($row[0]!='0'){
+                  echo "<span style='background-color: red' class='badge'>".$row[0]."</a>";
+                }
+                
               }
+              }
+
+            
+            
+
             }
+
 
          ?>
          
@@ -146,18 +166,27 @@ require('rating.php');
               require 'db.php';
               $idcraft=$_GET['id'];
               if($con){
-                $sql="SELECT tbuser.profilepic,tbuser.fn,tbuser.ln,tbcomment.idcraft,tbcomment.comment,tbcomment.datecomment,tbcomment.timecomment,tbcraft.username FROM tbuser INNER JOIN tbcomment ON tbuser.username=tbcomment.username INNER JOIN tbcraft ON tbcraft.idcraft=tbcomment.idcraft WHERE tbcomment.status='unread' AND tbcraft.username='".$_SESSION['logusername']."' ORDER BY idcomment DESC";
+                $sql="SELECT tbuser.profilepic,tbuser.fn,tbuser.ln,tbcomment.idcomment,tbcomment.idcraft,tbcomment.comment,tbcomment.datecomment,tbcomment.timecomment,tbcraft.username FROM tbuser INNER JOIN tbcomment ON tbuser.username=tbcomment.username INNER JOIN tbcraft ON tbcraft.idcraft=tbcomment.idcraft WHERE tbcomment.status='unread' AND tbcraft.username='".$_SESSION['logusername']."' ORDER BY idcomment DESC";
               $result=mysqli_query($con,$sql);
-              while($row=mysqli_fetch_array($result)){
+              if(mysqli_num_rows($result)>0){
+                while($row=mysqli_fetch_array($result)){
                 echo " <li>
-                <a href='craftview?id=".$row['idcraft']."' id='notif'>";
+                <a href='craftview?id=".$row['idcraft']."&idcom=".$row['idcomment']."' id='notif'>";
                   echo '<img width="30px" height="30px" src="data:image/jpeg;base64,'.base64_encode( $row['profilepic'] ).'"/>';
                   echo "".$row['fn'].", ".$row['ln']." commented on your post.<br>".$row['datecomment']." at ".$row['timecomment']."</a>
               </li>";
               }
               }
-
+              else{
+               echo '<h4 style="color:white;">No Record Yet..</h4>';
+              }
+              
+              $idcomment=$_GET['idcom'];
+              $sqlup="UPDATE tbcomment SET status='read' WHERE idcraft='".$idcraft."' AND idcomment='".$idcomment."'";
+              mysqli_query($con,$sqlup);
+              }
             ?>
+            
               </ul>
 
         </li>
@@ -171,7 +200,7 @@ require('rating.php');
           <div class="header_top_right">
 
 			<p>
-				<input class="form-control" id ="searchicon" type="text" name="" placeholder="Search"></input>
+				<input class="form-control" id ="tbsearch" type="text" name="" placeholder="Search"></input>
 			</p>
 			
           </div>
@@ -182,32 +211,7 @@ require('rating.php');
   </header>
 
 
-    <div class="row">
-          <div class="col-sm-11">
-             <div class="latest_newsarea" style="background-color: #00AF66"> <span style="background-color:#003000">Recently Uploaded</span>
-          <ul id="ticker01" class="news_sticker">
-             <?php
-             require 'db.php'; 
-            
-            $sqlrecent="SELECT * FROM tbcraft  ORDER BY idcraft DESC";
-            $resultrecent=mysqli_query($con,$sqlrecent);
-            while($row = mysqli_fetch_array($resultrecent)){
-              echo "<li><a href='craftview?id=".$row['idcraft']."'>";
-               echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/>';
-              echo "".$row['namecraft']."</a></li>";
-
-            }
-
-            ?>
-            
-          </ul>
-         
-        </div>
-          </div>
-          <div class="col-sm-1">
-            <a class="btn btn-danger" href="logout">Logout</a>
-          </div>
-        </div>
+   <?php require 'recentlyniloguser.php'; ?>
        
 
 <section id="sliderSection">
@@ -219,10 +223,14 @@ require('rating.php');
             <h2 style="background-color: #00AF66"><span style="background-color:#003000">How to Make</span></h2>
 
             <?php 
-
-            echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . ucfirst($_SESSION["logusername"]) . "</label> wishing you all the best!ahaha</h3>";
-             
-
+                require 'db.php'; 
+            
+            $sqlrecent="SELECT * FROM tbuser WHERE username='".$_SESSION['logusername']."'";
+            $resultrecent=mysqli_query($con,$sqlrecent);
+            if($row = mysqli_fetch_array($resultrecent)){
+                echo "<h3 style='color:#003000;'>Hi!  <label style='color:#00AF66;'>" . ucfirst($row['fn']) . " ".ucfirst($row['ln'])."</label> wishing you all the best!ahaha</h3>";
+            }
+            
             ?>
             <div class="slick_slider">
          <div class="left_content">
@@ -347,7 +355,7 @@ require('rating.php');
                       <textarea rows="3" class="form-control" placeholder="Write a Comment.." id="combox" name="combox"></textarea>
                  
                     </div>
-                    <button type="submit" class="btn btn-info" name="btncomment" id="btncomment" onclick="insertcomment()">Submit</button>
+                    <button type="submit" class="btn btn-info" name="btncomment" id="btncomment" onclick="insertcomment()">Send</button>
               
 
                       </div>
@@ -446,7 +454,7 @@ require('rating.php');
                     echo" <li>
                 <div class='media'> <a href='#' class='media-left'>";
                 echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['output1'] ).'"/></a>';
-                echo " <div class='media-body'> <a href='craftview?id=".$row['idcraft']."' class='catg_title' style='color:#003000'><strong>".$row['namecraft']."</strong></a><br><label style='color:#00AF66'><strong>".ucfirst($row['fn']).", ".ucfirst($row['ln'])."<br> ".$row['category']."</strong></label></div>
+                echo " <div class='media-body'> <a href='craftview?id=".$row['idcraft']."&idcom=' class='catg_title' style='color:#003000'><strong>".$row['namecraft']."</strong></a><br><label style='color:#00AF66'><strong>".ucfirst($row['fn']).", ".ucfirst($row['ln'])."<br> ".$row['category']."</strong></label></div>
                 </div>
               </li>";
                   }
@@ -559,5 +567,13 @@ $('#coms').click(function(){
 <script src="assets/js/jquery.newsTicker.min.js"></script> 
 <script src="assets/js/jquery.fancybox.pack.js"></script> 
 <script src="assets/js/custom.js"></script>
+<script type="text/javascript">
+   $("#tbsearch").on('keyup', function (e) {
+    var value = $('#tbsearch').val();
+      if (e.keyCode == 13) {
+         window.location.href = "searchpage?id="+value;
+      }
+  });
+</script>
 
 
